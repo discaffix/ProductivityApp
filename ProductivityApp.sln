@@ -5,7 +5,9 @@ VisualStudioVersion = 16.0.30804.86
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProductivityApp.Model", "ProductivityApp.Model\ProductivityApp.Model.csproj", "{519DF0E7-6BAD-490F-8AAE-19AA254B6B7D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProductivityApp.DataContext", "ProductivityApp.DataContext\ProductivityApp.DataContext.csproj", "{128124F4-29D4-4E78-B45E-E3A249A9977A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProductivityApp.DataAccess", "ProductivityApp.DataContext\ProductivityApp.DataAccess.csproj", "{128124F4-29D4-4E78-B45E-E3A249A9977A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProductivityApp.ConsoleApp", "ProductivityApp.ConsoleApp\ProductivityApp.ConsoleApp.csproj", "{A79813B4-7337-48DE-8A73-8A1DC7D36A18}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{128124F4-29D4-4E78-B45E-E3A249A9977A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{128124F4-29D4-4E78-B45E-E3A249A9977A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{128124F4-29D4-4E78-B45E-E3A249A9977A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A79813B4-7337-48DE-8A73-8A1DC7D36A18}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A79813B4-7337-48DE-8A73-8A1DC7D36A18}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A79813B4-7337-48DE-8A73-8A1DC7D36A18}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A79813B4-7337-48DE-8A73-8A1DC7D36A18}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

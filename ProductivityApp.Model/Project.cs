@@ -11,5 +11,8 @@ namespace ProductivityApp.Model
         public Workspace Workspace { get; set; }
 
         public Client Client { get; set; }
+
+        public ICollection<Session> Sessions { get; } = new List<Session>();
+
     }
 }
