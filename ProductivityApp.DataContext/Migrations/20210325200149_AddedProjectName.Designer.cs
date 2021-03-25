@@ -10,8 +10,8 @@ using ProductivityApp.DataAccess;
 namespace ProductivityApp.DataAccess.Migrations
 {
     [DbContext(typeof(ProductivityContext))]
-    [Migration("20210321160629_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20210325200149_AddedProjectName")]
+    partial class AddedProjectName
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -41,11 +41,16 @@ namespace ProductivityApp.DataAccess.Migrations
 
             modelBuilder.Entity("ProductivityApp.Model.Project", b =>
                 {
-                    b.Property<string>("ProjectId")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("ProjectId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<int?>("ClientId")
                         .HasColumnType("int");
+
+                    b.Property<string>("ProjectName")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int?>("WorkspaceId")
                         .HasColumnType("int");
@@ -72,8 +77,8 @@ namespace ProductivityApp.DataAccess.Migrations
                     b.Property<DateTime>("EndTime")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("ProjectId")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int?>("ProjectId")
+                        .HasColumnType("int");
 
                     b.Property<DateTime>("StartTime")
                         .HasColumnType("datetime2");

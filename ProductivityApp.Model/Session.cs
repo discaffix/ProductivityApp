@@ -18,6 +18,6 @@ namespace ProductivityApp.Model
 
         public Project Project { get; set; }
 
-        public ICollection<SessionTag> Tags { get; set; }
+        public ICollection<SessionTag> Tags { get; set; } = new List<SessionTag>();
     }
 }

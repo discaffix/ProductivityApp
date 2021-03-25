@@ -77,7 +77,8 @@ namespace ProductivityApp.DataAccess.Migrations
                 name: "Projects",
                 columns: table => new
                 {
-                    ProjectId = table.Column<string>(nullable: false),
+                    ProjectId = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     WorkspaceId = table.Column<int>(nullable: true),
                     ClientId = table.Column<int>(nullable: true)
                 },
@@ -108,7 +109,7 @@ namespace ProductivityApp.DataAccess.Migrations
                     StartTime = table.Column<DateTime>(nullable: false),
                     EndTime = table.Column<DateTime>(nullable: false),
                     UserId = table.Column<int>(nullable: true),
-                    ProjectId = table.Column<string>(nullable: true)
+                    ProjectId = table.Column<int>(nullable: true)
                 },
                 constraints: table =>
                 {

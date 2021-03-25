@@ -6,7 +6,9 @@ namespace ProductivityApp.Model
 {
     public class Project
     {
-        public string ProjectId { get; set; }
+        public int ProjectId { get; set; }
+
+        public string ProjectName { get; set; }
 
         public Workspace Workspace { get; set; }
 
