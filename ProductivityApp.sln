@@ -5,9 +5,11 @@ VisualStudioVersion = 16.0.30804.86
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProductivityApp.Model", "ProductivityApp.Model\ProductivityApp.Model.csproj", "{519DF0E7-6BAD-490F-8AAE-19AA254B6B7D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProductivityApp.DataAccess", "ProductivityApp.DataContext\ProductivityApp.DataAccess.csproj", "{128124F4-29D4-4E78-B45E-E3A249A9977A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProductivityApp.DataAccess", "ProductivityApp.DataContext\ProductivityApp.DataAccess.csproj", "{128124F4-29D4-4E78-B45E-E3A249A9977A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProductivityApp.ConsoleApp", "ProductivityApp.ConsoleApp\ProductivityApp.ConsoleApp.csproj", "{A79813B4-7337-48DE-8A73-8A1DC7D36A18}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProductivityApp.ConsoleApp", "ProductivityApp.ConsoleApp\ProductivityApp.ConsoleApp.csproj", "{A79813B4-7337-48DE-8A73-8A1DC7D36A18}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProductivityApp.Api", "ProductivityApp.Api\ProductivityApp.Api.csproj", "{C3336DA6-5F51-4E43-B33A-62E4EFA03E08}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,6 +29,10 @@ Global
 		{A79813B4-7337-48DE-8A73-8A1DC7D36A18}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A79813B4-7337-48DE-8A73-8A1DC7D36A18}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A79813B4-7337-48DE-8A73-8A1DC7D36A18}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C3336DA6-5F51-4E43-B33A-62E4EFA03E08}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C3336DA6-5F51-4E43-B33A-62E4EFA03E08}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C3336DA6-5F51-4E43-B33A-62E4EFA03E08}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C3336DA6-5F51-4E43-B33A-62E4EFA03E08}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

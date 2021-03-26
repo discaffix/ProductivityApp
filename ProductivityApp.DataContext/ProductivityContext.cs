@@ -21,6 +21,9 @@ namespace ProductivityApp.DataAccess
         public DbSet<Session> Sessions { get; set; }
         public DbSet<Tag> Tags { get; set; }
         public DbSet<Workspace> Workspaces { get; set; }
+        public DbSet<SessionTag> SessionTags { get; set; }
+
+        public ProductivityContext(DbContextOptions<ProductivityContext> options) : base (options) { }
 
         /// <summary>
         /// <para>
