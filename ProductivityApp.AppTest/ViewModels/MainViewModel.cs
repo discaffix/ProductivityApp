@@ -10,7 +10,7 @@ namespace ProductivityApp.AppTest.ViewModels
     public class MainViewModel : ViewModelBase
     {
 
-        private string sessionDescription;
+        private string sessionDescription = "test";
         public string SessionDescription
         {
             get

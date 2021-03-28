@@ -25,6 +25,8 @@
             -->
 
             <StackPanel>
+                <TextBox Text="{x:Bind ViewModel.SessionDescription}" />
+              
                 <ListView x:Name="Sessions" ItemsSource="{x:Bind ViewModel.Sessions}">
                     <ListView.ItemTemplate>
                         <DataTemplate>
