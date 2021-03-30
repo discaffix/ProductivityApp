@@ -24,7 +24,7 @@ namespace ProductivityApp.DataAccess
         public DbSet<SessionTag> SessionTags { get; set; }
 
         public ProductivityContext(DbContextOptions<ProductivityContext> options) : base (options) { }
-
+        
         /// <summary>
         /// <para>
         /// Override this method to configure the database (and other options) to be used for this context.

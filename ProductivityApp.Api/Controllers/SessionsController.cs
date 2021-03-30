@@ -25,14 +25,10 @@ namespace ProductivityApp.Api.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Session>>> GetSessions()
         {
-            //var users = await _context.Users
-            //  .Include(user => user.Sessions)
-            //  .ToListAsync
-
             var sessions = await _context.Sessions
-              .Include(session => session.User)
-              .Include(session => session.Project)
-              .ToListAsync();
+                .Include(session => session.User)
+                .Include(session => session.Project)
+                .ToListAsync();
 
             return sessions;
         }
