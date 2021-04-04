@@ -2,9 +2,8 @@
 using System.Collections.ObjectModel;
 using GalaSoft.MvvmLight;
 using ProductivityApp.Model;
-using ProductivityApp.AppTesting.DataAccess;
-using ProductivityApp.AppTest.DataAccess;
 using System.Threading.Tasks;
+using ProductivityApp.Apptesting.DataAccess;
 
 namespace ProductivityApp.AppTesting.ViewModels
 {
@@ -40,7 +39,6 @@ namespace ProductivityApp.AppTesting.ViewModels
         {
 
         }
-
 
         internal async Task LoadSessionsAsync()
         {

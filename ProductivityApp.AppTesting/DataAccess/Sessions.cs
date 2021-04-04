@@ -9,20 +9,23 @@ namespace ProductivityApp.Apptesting.DataAccess
     {
         static readonly Uri sessionsBaseUri = new Uri("http://localhost:60098/api/sessions");
 
-        /// <summary>
-        /// Gets the sessions table asynchronous.
-        /// </summary>
-        /// <returns>The table</returns>
+        public async void AddSessionAsync(Session session)
+        {
+            await AddEntryToDatabase(sessionsBaseUri, session);
+        }
+
+        public async void DeleteSessionAsync(Session session)
+        {
+            await DeleteDatabaseEntry(sessionsBaseUri, session);
+        }
+
+        public async Task<Session> GetOneSessionAsync(int id)
+        {
+            return await GetEntryFromDatabase<Session>(sessionsBaseUri, id);
+        }
+
         public async Task<Session[]> GetSessionsAsync()
         {
-            //var session = new Session() { SessionId = 8 };
-
-            var specificEntry = GetEntryFromDatabase<Session>(sessionsBaseUri, 1);
-
-            //var test = await AddEntryToDatabase(sessionsBaseUri, session);
-
-            //var second = DeleteDatabaseEntry(sessionsBaseUri, session);
-
             return await GetDataFromUri<Session>(sessionsBaseUri);
         }
     }
