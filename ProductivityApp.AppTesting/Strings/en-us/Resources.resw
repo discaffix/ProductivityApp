@@ -165,4 +165,12 @@
     <value>SignIn</value>
     <comment>Menu item text for SignIn</comment>
   </data>
+  <data name="Register_Title.Text" xml:space="preserve">
+    <value>Register</value>
+    <comment>Page title for RegisterPage</comment>
+  </data>
+  <data name="ShellMenuItem_Views_Register.Text" xml:space="preserve">
+    <value>Register</value>
+    <comment>Menu item text for Register</comment>
+  </data>
 </root>

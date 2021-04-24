@@ -8,10 +8,8 @@ namespace ProductivityApp.AppTesting.Views
 {
     public sealed partial class SignInPage : Page
     {
-        private SignInViewModel ViewModel
-        {
-            get { return ViewModelLocator.Current.SignInViewModel; }
-        }
+        public SignInViewModel ViewModel => ViewModelLocator.Current.SignInViewModel;
+       
 
         public SignInPage()
         {

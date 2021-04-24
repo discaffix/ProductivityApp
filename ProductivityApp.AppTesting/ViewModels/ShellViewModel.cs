@@ -25,6 +25,7 @@ namespace ProductivityApp.AppTesting.ViewModels
         private ICommand _menuViewsMainCommand;
         private ICommand _menuViewsChartCommand;
         private ICommand _menuViewsSignInCommand;
+        private ICommand _menuViewsRegisterCommand;
         private ICommand _menuFileExitCommand;
 
         public ICommand LoadedCommand => _loadedCommand ?? (_loadedCommand = new RelayCommand(OnLoaded));
@@ -34,6 +35,8 @@ namespace ProductivityApp.AppTesting.ViewModels
         public ICommand MenuViewsChartCommand => _menuViewsChartCommand ?? (_menuViewsChartCommand = new RelayCommand(OnMenuViewsChart));
 
         public ICommand MenuViewsSignInCommand => _menuViewsSignInCommand ?? (_menuViewsSignInCommand = new RelayCommand(OnMenuViewsSignIn));
+
+        public ICommand MenuViewsRegisterCommand => _menuViewsRegisterCommand ?? (_menuViewsRegisterCommand = new RelayCommand(OnMenuViewsRegister));
 
         public ICommand MenuFileExitCommand => _menuFileExitCommand ?? (_menuFileExitCommand = new RelayCommand(OnMenuFileExit));
 
@@ -63,6 +66,8 @@ namespace ProductivityApp.AppTesting.ViewModels
         private void OnMenuViewsChart() => MenuNavigationHelper.UpdateView(typeof(ChartViewModel).FullName);
 
         private void OnMenuViewsSignIn() => MenuNavigationHelper.UpdateView(typeof(SignInViewModel).FullName);
+
+        private void OnMenuViewsRegister() => MenuNavigationHelper.UpdateView(typeof(RegisterViewModel).FullName);
 
         private void OnMenuFileExit()
         {
