@@ -19,7 +19,10 @@ namespace ProductivityApp.AppTesting.ViewModels
             SimpleIoc.Default.Register(() => new NavigationServiceEx());
             Register<MainViewModel, MainPage>();
             Register<ChartViewModel, ChartPage>();
+            Register<SignInViewModel, SignInPage>();
         }
+
+        public SignInViewModel SignInViewModel => SimpleIoc.Default.GetInstance<SignInViewModel>();
 
         public ChartViewModel ChartViewModel => SimpleIoc.Default.GetInstance<ChartViewModel>();
 

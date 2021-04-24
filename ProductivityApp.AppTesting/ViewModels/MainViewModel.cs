@@ -4,6 +4,9 @@ using GalaSoft.MvvmLight;
 using ProductivityApp.Model;
 using System.Threading.Tasks;
 using ProductivityApp.Apptesting.DataAccess;
+using Windows.UI.Xaml.Controls;
+using GalaSoft.MvvmLight.Views;
+using ProductivityApp.AppTesting.Helpers;
 
 namespace ProductivityApp.AppTesting.ViewModels
 {
@@ -42,9 +45,16 @@ namespace ProductivityApp.AppTesting.ViewModels
 
         internal async Task LoadSessionsAsync()
         {
+            MenuNavigationHelper.UpdateView(typeof(SignInViewModel).FullName);
+
             var sessions = await sessionsDataAccess.GetSessionsAsync();
             foreach (Session session in sessions)
                 Sessions.Add(session);
+        }
+
+        public void RedirectLoginPage()
+        {
+            MenuNavigationHelper.UpdateView(typeof(SignInViewModel).FullName);
         }
     }
 }
