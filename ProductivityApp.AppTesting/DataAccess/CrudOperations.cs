@@ -8,8 +8,8 @@ namespace ProductivityApp.AppTesting.DataAccess
 {
     public class CrudOperations
     {
-        readonly HttpClient _httpClient = new HttpClient();
-       
+        private readonly HttpClient _httpClient = new HttpClient();
+        private readonly Uri BaseUri = new Uri("http://localhost:60098/api/");
         /// <summary>
         /// Gets the data from URI.
         /// </summary>
@@ -48,8 +48,8 @@ namespace ProductivityApp.AppTesting.DataAccess
         /// <returns></returns>
         internal async Task<bool> AddEntryToDatabase<T>(Uri uri, T item) where T : class
         {
-            string json = JsonConvert.SerializeObject(item);
-            HttpResponseMessage result = await _httpClient.PostAsync(uri, new StringContent(json, Encoding.UTF8, "application/json"));
+            var json = JsonConvert.SerializeObject(item);
+            var result = await _httpClient.PostAsync(uri, new StringContent(json, Encoding.UTF8, "application/json"));
             return result.IsSuccessStatusCode;
         }
 

@@ -8,14 +8,7 @@ namespace ProductivityApp.AppTesting.Views
 {
     public sealed partial class RegisterPage : Page
     {
-        private RegisterViewModel ViewModel
-        {
-            get { return ViewModelLocator.Current.RegisterViewModel; }
-        }
-
-        public RegisterPage()
-        {
-            InitializeComponent();
-        }
+        public RegisterViewModel ViewModel => ViewModelLocator.Current.RegisterViewModel;
+        public RegisterPage() => InitializeComponent();
     }
 }

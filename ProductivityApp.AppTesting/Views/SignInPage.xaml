@@ -30,15 +30,15 @@
                 Width="300"
                 Orientation="vertical"
                 VerticalAlignment="center">
-                <TextBox Text="" PlaceholderText="Email" Margin="0,0,0,15" />
-                <TextBox PlaceholderText="Password" TextChanged="TextBox_TextChanged" Margin="0,0,0,15" />
+                <TextBox Text="{x:Bind ViewModel.Email, Mode=TwoWay}"  PlaceholderText="Email" Margin="0,0,0,15" />
+                <TextBox Text="{x:Bind ViewModel.Password, Mode=TwoWay}" PlaceholderText="Password" TextChanged="TextBox_TextChanged" Margin="0,0,0,15" />
+
                 <StackPanel
                     Orientation="Horizontal">
-                    <Button Content="Login" Margin="0,0,15,0"/>
-                    <Button Content="Register"  Command="{x:Bind ViewModel.SimpleCommand}" />
+                    <Button Content="Login" Margin="0,0,15,0" Command="{x:Bind ViewModel.LoginCommand}"/>
+                    <Button Content="Register"  Command="{x:Bind ViewModel.RegisterCommand}" />
                 </StackPanel>
             </StackPanel>
-            
         </Grid>
     </Grid>
 </Page>

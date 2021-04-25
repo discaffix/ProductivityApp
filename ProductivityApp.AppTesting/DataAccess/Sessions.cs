@@ -7,26 +7,26 @@ namespace ProductivityApp.Apptesting.DataAccess
 {
     class Sessions : CrudOperations
     {
-        static readonly Uri sessionsBaseUri = new Uri("http://localhost:60098/api/sessions");
+        static readonly Uri SessionsBaseUri = new Uri("http://localhost:60098/api/sessions");
 
         public async void AddSessionAsync(Session session)
         {
-            await AddEntryToDatabase(sessionsBaseUri, session);
+            await AddEntryToDatabase(SessionsBaseUri, session);
         }
 
         public async void DeleteSessionAsync(Session session)
         {
-            await DeleteDatabaseEntry(sessionsBaseUri, session);
+            await DeleteDatabaseEntry(SessionsBaseUri, session);
         }
 
         public async Task<Session> GetOneSessionAsync(int id)
         {
-            return await GetEntryFromDatabase<Session>(sessionsBaseUri, id);
+            return await GetEntryFromDatabase<Session>(SessionsBaseUri, id);
         }
 
         public async Task<Session[]> GetSessionsAsync()
         {
-            return await GetDataFromUri<Session>(sessionsBaseUri);
+            return await GetDataFromUri<Session>(SessionsBaseUri);
         }
     }
 }

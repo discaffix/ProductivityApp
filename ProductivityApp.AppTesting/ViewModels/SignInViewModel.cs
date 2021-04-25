@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Windows.Input;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
@@ -8,14 +9,58 @@ namespace ProductivityApp.AppTesting.ViewModels
 {
     public class SignInViewModel : ViewModelBase
     {
-        public ICommand SimpleCommand { get; set; }
- 
+        public ICommand RegisterCommand { get; set; }
+        public ICommand LoginCommand { get; set; }
+
+        private string _email;
+        private string _password;
+
+        /// <summary>
+        /// Gets or sets the email.
+        /// </summary>
+        /// <value>
+        /// The email.
+        /// </value>
+        public string Email
+        {
+            get => _email;
+            set
+            {
+                if (string.Equals(_email, value)) return;
+
+                _email = value;
+                RaisePropertyChanged("Email");
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the password.
+        /// </summary>
+        /// <value>
+        /// The password.
+        /// </value>
+        public string Password
+        {
+            get => _password;
+            set
+            {
+                if (string.Equals(_password, value)) return;
+
+                _password = value;
+                RaisePropertyChanged("Password");
+            }
+        }
+
         public SignInViewModel()
         {
-            // TODO: Add Command for login
-            SimpleCommand = new Helpers.RelayCommand<string>(test =>
+            RegisterCommand = new Helpers.RelayCommand<string>(test =>
             {
                 SimpleMethod();
+            });
+
+            LoginCommand = new Helpers.RelayCommand<string>(login =>
+            {
+                MenuNavigationHelper.UpdateView(typeof(RegisterViewModel).FullName);
             });
         }
 

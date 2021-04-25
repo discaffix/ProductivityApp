@@ -23,6 +23,23 @@
                 The SystemControlPageBackgroundChromeLowBrush background represents where you should place your content. 
                 Place your content here.
             -->
+            <StackPanel
+                Width="300"
+                Orientation="vertical"
+                VerticalAlignment="center">
+                <TextBox Text="" PlaceholderText="Firstname" Margin="0,0,0,15" />
+                <TextBox Text="" PlaceholderText="Lastname" Margin="0,0,0,15" />
+                <TextBox Text="" PlaceholderText="Email" Margin="0,0,0,15" />
+                <TextBox Text="" PlaceholderText="Password" Margin="0,0,0,15" />
+                <TextBox Text="" PlaceholderText="Confirm Password" Margin="0,0,0,15" />
+                <DatePicker Header="Date of Birth" Margin="0,0,0,15"/>
+                <StackPanel
+                    Orientation="Horizontal">
+                    <Button Content="Register"  Command="{x:Bind ViewModel.SimpleCommand}" />
+                </StackPanel>
+            </StackPanel>
+
+
         </Grid>
     </Grid>
 </Page>
