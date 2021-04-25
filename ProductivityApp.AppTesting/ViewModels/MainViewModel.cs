@@ -5,6 +5,7 @@ using ProductivityApp.Model;
 using System.Threading.Tasks;
 using ProductivityApp.Apptesting.DataAccess;
 using ProductivityApp.AppTesting.Helpers;
+using ProductivityApp.AppTesting.DataAccess;
 
 namespace ProductivityApp.AppTesting.ViewModels
 {
@@ -31,21 +32,21 @@ namespace ProductivityApp.AppTesting.ViewModels
         /// </summary>
         public ObservableCollection<Session> Sessions { get; set; } = new ObservableCollection<Session>();
 
-        private readonly Sessions _sessionsDataAccess = new Sessions();
+        private readonly CrudOperations _dataAccess = new Sessions();
 
         public MainViewModel()
         {
-
+            
         }
 
-        internal async Task LoadSessionsAsync()
-        {
-            MenuNavigationHelper.UpdateView(typeof(SignInViewModel).FullName);
+        //internal async Task LoadSessionsAsync()
+        //{
+        //    MenuNavigationHelper.UpdateView(typeof(SignInViewModel).FullName);
 
-            var sessions = await _sessionsDataAccess.GetSessionsAsync();
-            foreach (var session in sessions)
-                Sessions.Add(session);
-        }
+        //    var sessions = await _sessionsDataAccess.GetSessionsAsync();
+        //    foreach (var session in sessions)
+        //        Sessions.Add(session);
+        //}
 
         public void RedirectLoginPage()
         {

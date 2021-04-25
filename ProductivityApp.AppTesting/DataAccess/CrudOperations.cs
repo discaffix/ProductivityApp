@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.Net.Http;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -9,16 +10,29 @@ namespace ProductivityApp.AppTesting.DataAccess
     public class CrudOperations
     {
         private readonly HttpClient _httpClient = new HttpClient();
-        private readonly Uri BaseUri = new Uri("http://localhost:60098/api/");
+        private readonly string BaseUri = "http://localhost:60098/api/";
+        private Uri uri;
+
         /// <summary>
         /// Gets the data from URI.
         /// </summary>
         /// <typeparam name="T">The type of object that is retrieved</typeparam>
         /// <param name="uri">The URI of the API of which you want to retrieve</param>
         /// <returns>Data</returns>
-        internal async Task<T[]> GetDataFromUri<T>(Uri uri) where T : class
+        internal async Task<T[]> GetDataFromUri<T>(string directTablePath, [Optional]string table, [Optional]string value) where T : class
         {
-            var result = await _httpClient.GetAsync(uri);
+            uri = new Uri(BaseUri + directTablePath);
+            HttpResponseMessage result;
+
+            if (table != null && value != null)
+            {
+                result = await _httpClient.GetAsync(uri);
+            }
+            else
+            {
+                result = await _httpClient.GetAsync(uri);
+            }
+
             var json = await result.Content.ReadAsStringAsync();
             var data = JsonConvert.DeserializeObject<T[]>(json);
             return data;
@@ -31,8 +45,10 @@ namespace ProductivityApp.AppTesting.DataAccess
         /// <param name="uri">The URI.</param>
         /// <param name="value">The value.</param>
         /// <returns>One entry</returns>
-        internal async Task<T> GetEntryFromDatabase<T>(Uri uri, int value) where T : class
+        internal async Task<T> GetEntryFromDatabase<T>(string directTablePath, int value) where T : class
         {
+            uri = new Uri(BaseUri + directTablePath);
+
             var result = await _httpClient.GetAsync($"{uri}/{value}");
             var json = await result.Content.ReadAsStringAsync();
             var data = JsonConvert.DeserializeObject<T>(json);
@@ -46,8 +62,10 @@ namespace ProductivityApp.AppTesting.DataAccess
         /// <param name="uri">The URI.</param>
         /// <param name="item">The item.</param>
         /// <returns></returns>
-        internal async Task<bool> AddEntryToDatabase<T>(Uri uri, T item) where T : class
+        internal async Task<bool> AddEntryToDatabase<T>(string directTablePath, T item) where T : class
         {
+            uri = new Uri(BaseUri + directTablePath);
+
             var json = JsonConvert.SerializeObject(item);
             var result = await _httpClient.PostAsync(uri, new StringContent(json, Encoding.UTF8, "application/json"));
             return result.IsSuccessStatusCode;
@@ -60,8 +78,10 @@ namespace ProductivityApp.AppTesting.DataAccess
         /// <param name="uri">The URI.</param>
         /// <param name="item">The item.</param>
         /// <returns></returns>
-        internal async Task<bool> DeleteDatabaseEntry<T>(Uri uri, T item)
+        internal async Task<bool> DeleteDatabaseEntry<T>(string directTablePath, T item)
         {
+            uri = new Uri(BaseUri + directTablePath);
+
             var controller = item.GetType().Name;
             var properties = item.GetType().GetProperties();
             var idValue = properties[0].GetValue(item, null);

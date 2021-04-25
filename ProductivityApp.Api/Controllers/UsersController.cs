@@ -30,8 +30,6 @@ namespace ProductivityApp.Api.Controllers
              .Include(user => user.Workspaces)
              .ToListAsync();
 
-
-
             return await _context.Users.ToListAsync();
         }
 
@@ -48,6 +46,8 @@ namespace ProductivityApp.Api.Controllers
 
             return user;
         }
+
+
 
         // PUT: api/Users/5
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
@@ -80,6 +80,8 @@ namespace ProductivityApp.Api.Controllers
 
             return NoContent();
         }
+
+    
 
         // POST: api/Users
         // To protect from overposting attacks, enable the specific properties you want to bind to, for

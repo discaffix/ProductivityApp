@@ -1,10 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Windows.Input;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
+using ProductivityApp.AppTesting.DataAccess;
 using ProductivityApp.AppTesting.Helpers;
-
+using ProductivityApp.Model;
 namespace ProductivityApp.AppTesting.ViewModels
 {
     public class SignInViewModel : ViewModelBase
@@ -14,6 +16,9 @@ namespace ProductivityApp.AppTesting.ViewModels
 
         private string _email;
         private string _password;
+
+        private readonly CrudOperations _dataAccess = new CrudOperations();
+        private List<Session> Sessions = new List<Session>();
 
         /// <summary>
         /// Gets or sets the email.
@@ -53,13 +58,18 @@ namespace ProductivityApp.AppTesting.ViewModels
 
         public SignInViewModel()
         {
-            RegisterCommand = new Helpers.RelayCommand<string>(test =>
+            RegisterCommand = new Helpers.RelayCommand<string>(register =>
             {
                 SimpleMethod();
             });
 
-            LoginCommand = new Helpers.RelayCommand<string>(login =>
+            LoginCommand = new Helpers.RelayCommand<string>(async login =>
             {
+                var sessions = await _dataAccess.GetDataFromUri<Session>("sessions");
+                
+                foreach (var session in sessions)
+                    Sessions.Add(session);
+
                 MenuNavigationHelper.UpdateView(typeof(RegisterViewModel).FullName);
             });
         }
