@@ -81,8 +81,9 @@ namespace ProductivityApp.AppTesting.DataAccess
         {
             uri = new Uri(BaseUri + directTablePath);
 
-            var controller = item.GetType().Name;
-            var properties = item.GetType().GetProperties();
+            var type = item.GetType();
+            var controller = type.Name;
+            var properties = type.GetProperties();
             var idValue = properties[0].GetValue(item, null);
 
             var newPath = $"{controller.ToLower()}s/{idValue}";
@@ -90,5 +91,6 @@ namespace ProductivityApp.AppTesting.DataAccess
 
             return result.IsSuccessStatusCode;
         }
+
     }
 }

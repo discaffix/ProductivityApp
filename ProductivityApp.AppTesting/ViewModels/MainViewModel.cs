@@ -1,17 +1,19 @@
-﻿using System;
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using GalaSoft.MvvmLight;
 using ProductivityApp.Model;
-using System.Threading.Tasks;
 using ProductivityApp.AppTesting.DataAccess;
 using ProductivityApp.AppTesting.Helpers;
-using ProductivityApp.AppTesting.DataAccess;
+using System.Windows.Input;
+using System;
+using System.Diagnostics;
 
 namespace ProductivityApp.AppTesting.ViewModels
 {
     public class MainViewModel : ViewModelBase
     {
-        private string _sessionDescription = "test";
+        public ICommand StartSession, StopSession;
+        private string _sessionDescription = "";
+        private Session session = new Session();
         public string SessionDescription
         {
             get => _sessionDescription;
@@ -24,18 +26,31 @@ namespace ProductivityApp.AppTesting.ViewModels
             }
         }
 
-
-
-        /// <summary>
-        /// Gets or sets the sessions.
-        /// </summary>
         public ObservableCollection<Session> Sessions { get; set; } = new ObservableCollection<Session>();
 
         private readonly CrudOperations _dataAccess = new Sessions();
 
         public MainViewModel()
         {
-            
+            StartSession = new RelayCommand<string>(register =>
+            {
+                session.Description = _sessionDescription;
+                session.StartTime = DateTime.Now;
+            });
+
+            StopSession = new RelayCommand<string>(async login =>
+            {
+                session.EndTime = DateTime.Now;
+
+                if (await _dataAccess.AddEntryToDatabase<Session>("sessions", session)) {
+                    Debug.Print("Session created");
+                }
+                else
+                {
+                    Debug.Print("Session failed");
+                }
+                //MenuNavigationHelper.UpdateView(typeof(RegisterViewModel).FullName);
+            });
         }
 
         //internal async Task LoadSessionsAsync()

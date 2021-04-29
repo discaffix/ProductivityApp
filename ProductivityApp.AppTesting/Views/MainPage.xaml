@@ -36,6 +36,13 @@
                         </DataTemplate>
                     </ListView.ItemTemplate>
                 </ListView>
+                <StackPanel
+                    Orientation="Horizontal">
+                    <Button Content="Start Session" Margin="0,5,0,0" Command="{x:Bind ViewModel.StartSession}"/>
+                    <Button Content="Stop Session" Margin="15,5,0,0" Command="{x:Bind ViewModel.StopSession}"/>
+                    <TextBlock Text="00:05:25" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="25,0,0,0" />
+                </StackPanel>
+
             </StackPanel>
         </Grid>
     </Grid>
