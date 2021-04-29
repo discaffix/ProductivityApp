@@ -34,8 +34,7 @@ namespace ProductivityApp.AppTesting.DataAccess
             }
 
             var json = await result.Content.ReadAsStringAsync();
-            var data = JsonConvert.DeserializeObject<T[]>(json);
-            return data;
+            return JsonConvert.DeserializeObject<T[]>(json); ;
         }
 
         /// <summary>
@@ -85,8 +84,8 @@ namespace ProductivityApp.AppTesting.DataAccess
             var controller = item.GetType().Name;
             var properties = item.GetType().GetProperties();
             var idValue = properties[0].GetValue(item, null);
-            var newPath = $"{controller.ToLower()}s/{idValue}";
 
+            var newPath = $"{controller.ToLower()}s/{idValue}";
             var result = await _httpClient.DeleteAsync(new Uri(uri, newPath));
 
             return result.IsSuccessStatusCode;
