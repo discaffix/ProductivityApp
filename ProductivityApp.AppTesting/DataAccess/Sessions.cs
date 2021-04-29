@@ -1,9 +1,9 @@
-﻿using ProductivityApp.AppTesting.DataAccess;
+﻿
 using ProductivityApp.Model;
 using System;
 using System.Threading.Tasks;
 
-namespace ProductivityApp.Apptesting.DataAccess
+namespace ProductivityApp.AppTesting.DataAccess
 {
     class Sessions : CrudOperations
     {

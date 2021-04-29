@@ -29,7 +29,7 @@ namespace ProductivityApp.AppTesting.ViewModels
                 if (string.Equals(_email, value)) return;
 
                 _email = value;
-                RaisePropertyChanged("Email");
+                //RaisePropertyChanged("Email");
             }
         }
 
@@ -47,7 +47,7 @@ namespace ProductivityApp.AppTesting.ViewModels
                 if (string.Equals(_password, value)) return;
 
                 _password = value;
-                RaisePropertyChanged("Password");
+                //RaisePropertyChanged("Password");
             }
         }
 
@@ -60,6 +60,7 @@ namespace ProductivityApp.AppTesting.ViewModels
 
             LoginCommand = new Helpers.RelayCommand<string>(login =>
             {
+                Debug.Print(_password + " " + _email);
                 MenuNavigationHelper.UpdateView(typeof(RegisterViewModel).FullName);
             });
         }

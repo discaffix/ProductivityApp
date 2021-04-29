@@ -3,7 +3,7 @@ using System.Collections.ObjectModel;
 using GalaSoft.MvvmLight;
 using ProductivityApp.Model;
 using System.Threading.Tasks;
-using ProductivityApp.Apptesting.DataAccess;
+using ProductivityApp.AppTesting.DataAccess;
 using ProductivityApp.AppTesting.Helpers;
 
 namespace ProductivityApp.AppTesting.ViewModels
@@ -16,11 +16,10 @@ namespace ProductivityApp.AppTesting.ViewModels
             get => _sessionDescription;
             set
             {
-                if (!string.Equals(_sessionDescription, value))
-                {
-                    _sessionDescription = value;
-                    RaisePropertyChanged();
-                }
+                if (string.Equals(_sessionDescription, value)) return;
+
+                _sessionDescription = value;
+                RaisePropertyChanged();
             }
         }
 
