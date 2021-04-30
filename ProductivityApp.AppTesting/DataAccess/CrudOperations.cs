@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using System;
+using System.Diagnostics;
 using System.Net.Http;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -47,6 +48,8 @@ namespace ProductivityApp.AppTesting.DataAccess
 
             var json = JsonConvert.SerializeObject(item);
             var result = await _httpClient.PostAsync(uri, new StringContent(json, Encoding.UTF8, "application/json"));
+
+            Debug.WriteLine(result);
             return result.IsSuccessStatusCode;
         }
 

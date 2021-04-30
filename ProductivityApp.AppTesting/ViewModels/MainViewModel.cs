@@ -16,26 +16,27 @@ namespace ProductivityApp.AppTesting.ViewModels
         public ICommand StartSession, StopSession;
 
         private string _sessionDescription = string.Empty;
-        private bool _startSessionBtnEnabled = true;
-        private bool _stopSessionBtnEnabled = false;
         private string _elapsedTime = string.Empty;
-        private readonly DispatcherTimer timer;
-        private Session session = new Session();
+
+        private bool _startSessionBtnEnabled = true;
+        private bool _stopSessionBtnEnabled;
+        
+        private Session _session = new Session();
 
         public ObservableCollection<Session> Sessions { get; set; } = new ObservableCollection<Session>();
         private readonly CrudOperations _dataAccess = new CrudOperations();
 
         public MainViewModel()
         {
-            timer = new DispatcherTimer();
+            var timer = new DispatcherTimer();
             timer.Tick += Timer_Tick;
             timer.Interval = new TimeSpan(0, 0, 1);
             timer.Start();
 
             StartSession = new RelayCommand<string>(register =>
             {
-                session.Description = _sessionDescription;
-                session.StartTime = DateTime.Now;
+                _session.Description = _sessionDescription;
+                _session.StartTime = DateTime.Now;
 
                 StartSessionBtnEnabled = false;
                 StopSessionBtnEnabled = true;
@@ -44,16 +45,16 @@ namespace ProductivityApp.AppTesting.ViewModels
             StopSession = new RelayCommand<string>(async login =>
             {
                 StopSessionBtnEnabled = false;
-                session.EndTime = DateTime.Now;
+                _session.EndTime = DateTime.Now;
 
-                User user = await _dataAccess.GetEntryFromDatabase<User>("users", 1);
-                session.User = user;
+                var user = await _dataAccess.GetEntryFromDatabase<User>("users", 1);
+                _session.User = user;
 
                 try
                 {
                     // TODO: Doesn't save when user is set to session
                     // https://stackoverflow.com/questions/50307633/how-do-i-postasync-with-multiple-simple-types
-                    await _dataAccess.AddEntryToDatabase<Session>("sessions", session);
+                    await _dataAccess.AddEntryToDatabase("sessions", _session);
                 }
                 catch (Exception e)
                 {
@@ -62,7 +63,7 @@ namespace ProductivityApp.AppTesting.ViewModels
                 finally
                 {
                     StartSessionBtnEnabled = true;
-                    session = new Session();
+                    _session = new Session();
                     SessionDescription = string.Empty;
                 }
             });
@@ -75,10 +76,7 @@ namespace ProductivityApp.AppTesting.ViewModels
         /// <param name="e"></param>
         private void Timer_Tick(object sender, object e)
         {
-            if (session.StartTime != null && !StartSessionBtnEnabled)
-                ElapsedTime = (DateTime.Now - session.StartTime).ToString(@"hh\:mm\:ss");
-            else
-                ElapsedTime = string.Empty;
+            ElapsedTime = !StartSessionBtnEnabled ? (DateTime.Now - _session.StartTime).ToString(@"hh\:mm\:ss") : string.Empty;
         }
 
         /// <summary>
@@ -89,14 +87,9 @@ namespace ProductivityApp.AppTesting.ViewModels
         {
             var sessions = await _dataAccess.GetDataFromUri<Session>("sessions");
 
-            foreach (Session session in sessions)
-                if (session.Description != null && session.Description.Length > 0)
+            foreach (var session in sessions)
+                if (!string.IsNullOrEmpty(session.Description))
                     Sessions.Add(session);
-        }
-
-        public void RedirectLoginPage()
-        {
-            MenuNavigationHelper.UpdateView(typeof(SignInViewModel).FullName);
         }
 
         public string ElapsedTime
@@ -108,7 +101,7 @@ namespace ProductivityApp.AppTesting.ViewModels
 
 
                 _elapsedTime = value;
-                RaisePropertyChanged("ElapsedTime");
+                RaisePropertyChanged();
             }
         }
 
@@ -123,7 +116,7 @@ namespace ProductivityApp.AppTesting.ViewModels
                 if (Equals(_startSessionBtnEnabled, value)) return;
 
                 _startSessionBtnEnabled = value;
-                RaisePropertyChanged("StartSessionBtnEnabled");
+                RaisePropertyChanged();
             }
         }
 
@@ -135,7 +128,7 @@ namespace ProductivityApp.AppTesting.ViewModels
                 if (Equals(_stopSessionBtnEnabled, value)) return;
 
                 _stopSessionBtnEnabled = value;
-                RaisePropertyChanged("StopSessionBtnEnabled");
+                RaisePropertyChanged();
             }
         }
 
@@ -147,7 +140,7 @@ namespace ProductivityApp.AppTesting.ViewModels
                 if (string.Equals(_sessionDescription, value)) return;
 
                 _sessionDescription = value;
-                RaisePropertyChanged("SessionDescription");
+                RaisePropertyChanged();
             }
         }
     }

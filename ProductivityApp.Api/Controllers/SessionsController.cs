@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ProductivityApp.DataAccess;
@@ -22,16 +21,16 @@ namespace ProductivityApp.Api.Controllers
         }
 
         // GET: api/Sessions
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<Session>>> GetSessions()
-        {
-            var sessions = await _context.Sessions
-                .Include(session => session.User)
-                .Include(session => session.Project)
-                .ToListAsync();
+    [HttpGet]
+    public async Task<ActionResult<IEnumerable<Session>>> GetSessions()
+    {
+        var sessions = await _context.Sessions
+            .Include(session => session.User)
+            .Include(session => session.Project)
+            .ToListAsync();
 
-            return sessions;
-        }
+        return sessions;
+    }
 
         // GET: api/Sessions/5
         [HttpGet("{id}")]
@@ -85,10 +84,10 @@ namespace ProductivityApp.Api.Controllers
         [HttpPost]
         public async Task<ActionResult<Session>> PostSession(Session session)
         {
-            _context.Sessions.Add(session);
+            await _context.Sessions.AddAsync(session);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetSession", new { id = session.SessionId }, session);
+            return CreatedAtAction(nameof(GetSession), new { id = session.SessionId }, session);
         }
 
         // DELETE: api/Sessions/5
