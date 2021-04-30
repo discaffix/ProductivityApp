@@ -11,21 +11,21 @@ namespace ProductivityApp.AppTesting.DataAccess
     public class CrudOperations
     {
         private readonly HttpClient _httpClient = new HttpClient();
-        private readonly string BaseUri = "http://localhost:60098/api/";
-        private Uri uri;
+        private const string BaseUri = "http://localhost:60098/api/";
+        private Uri _uri;
 
         internal async Task<T[]> GetDataFromUri<T>(string directTablePath, [Optional]string table, [Optional]string value) where T : class
         {
-            uri = new Uri(BaseUri + directTablePath);
+            _uri = new Uri(BaseUri + directTablePath);
             HttpResponseMessage result;
 
             if (table != null && value != null)
             {
-                result = await _httpClient.GetAsync(uri);
+                result = await _httpClient.GetAsync(_uri);
             }
             else
             {
-                result = await _httpClient.GetAsync(uri);
+                result = await _httpClient.GetAsync(_uri);
             }
 
             var json = await result.Content.ReadAsStringAsync();
@@ -34,9 +34,9 @@ namespace ProductivityApp.AppTesting.DataAccess
 
         internal async Task<T> GetEntryFromDatabase<T>(string directTablePath, int value) where T : class
         {
-            uri = new Uri(BaseUri + directTablePath);
+            _uri = new Uri(BaseUri + directTablePath);
 
-            var result = await _httpClient.GetAsync($"{uri}/{value}");
+            var result = await _httpClient.GetAsync($"{_uri}/{value}");
             var json = await result.Content.ReadAsStringAsync();
             var data = JsonConvert.DeserializeObject<T>(json);
             return data;
@@ -44,18 +44,24 @@ namespace ProductivityApp.AppTesting.DataAccess
 
         internal async Task<bool> AddEntryToDatabase<T>(string directTablePath, T item) where T : class
         {
-            uri = new Uri(BaseUri + directTablePath);
+            try
+            {
+                _uri = new Uri(BaseUri + directTablePath);
+                var json = JsonConvert.SerializeObject(item);
+                var result = await _httpClient.PostAsync(_uri, new StringContent(json, Encoding.UTF8, "application/json"));
+                return result.IsSuccessStatusCode;
 
-            var json = JsonConvert.SerializeObject(item);
-            var result = await _httpClient.PostAsync(uri, new StringContent(json, Encoding.UTF8, "application/json"));
+            } catch (HttpRequestException e)
+            {
+                Debug.Write(e);
+            }
 
-            Debug.WriteLine(result);
-            return result.IsSuccessStatusCode;
+            return false;
         }
 
         internal async Task<bool> DeleteDatabaseEntry<T>(string directTablePath, T item)
         {
-            uri = new Uri(BaseUri + directTablePath);
+            _uri = new Uri(BaseUri + directTablePath);
 
             var type = item.GetType();
             var controller = type.Name;
@@ -63,7 +69,7 @@ namespace ProductivityApp.AppTesting.DataAccess
             var idValue = properties[0].GetValue(item, null);
 
             var newPath = $"{controller.ToLower()}s/{idValue}";
-            var result = await _httpClient.DeleteAsync(new Uri(uri, newPath));
+            var result = await _httpClient.DeleteAsync(new Uri(_uri, newPath));
 
             return result.IsSuccessStatusCode;
         }

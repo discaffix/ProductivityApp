@@ -79,6 +79,7 @@ namespace ProductivityApp.DataAccess.Migrations
                 {
                     ProjectId = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
+                    ProjectName = table.Column<string>(nullable: true),
                     WorkspaceId = table.Column<int>(nullable: true),
                     ClientId = table.Column<int>(nullable: true)
                 },
@@ -108,8 +109,8 @@ namespace ProductivityApp.DataAccess.Migrations
                     Description = table.Column<string>(nullable: true),
                     StartTime = table.Column<DateTime>(nullable: false),
                     EndTime = table.Column<DateTime>(nullable: false),
-                    UserId = table.Column<int>(nullable: true),
-                    ProjectId = table.Column<int>(nullable: true)
+                    UserId = table.Column<int>(nullable: false),
+                    ProjectId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -119,17 +120,17 @@ namespace ProductivityApp.DataAccess.Migrations
                         column: x => x.ProjectId,
                         principalTable: "Projects",
                         principalColumn: "ProjectId",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Sessions_Users_UserId",
                         column: x => x.UserId,
                         principalTable: "Users",
                         principalColumn: "UserId",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "SessionTag",
+                name: "SessionTags",
                 columns: table => new
                 {
                     SessionId = table.Column<int>(nullable: false),
@@ -137,15 +138,15 @@ namespace ProductivityApp.DataAccess.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_SessionTag", x => new { x.SessionId, x.TagId });
+                    table.PrimaryKey("PK_SessionTags", x => new { x.SessionId, x.TagId });
                     table.ForeignKey(
-                        name: "FK_SessionTag_Sessions_SessionId",
+                        name: "FK_SessionTags_Sessions_SessionId",
                         column: x => x.SessionId,
                         principalTable: "Sessions",
                         principalColumn: "SessionId",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_SessionTag_Tags_TagId",
+                        name: "FK_SessionTags_Tags_TagId",
                         column: x => x.TagId,
                         principalTable: "Tags",
                         principalColumn: "TagId",
@@ -173,8 +174,8 @@ namespace ProductivityApp.DataAccess.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_SessionTag_TagId",
-                table: "SessionTag",
+                name: "IX_SessionTags_TagId",
+                table: "SessionTags",
                 column: "TagId");
 
             migrationBuilder.CreateIndex(
@@ -186,7 +187,7 @@ namespace ProductivityApp.DataAccess.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "SessionTag");
+                name: "SessionTags");
 
             migrationBuilder.DropTable(
                 name: "Sessions");

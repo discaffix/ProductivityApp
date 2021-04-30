@@ -9,7 +9,7 @@ namespace ProductivityApp.ConsoleApp
         static void Main(string[] args)
         {
             // user object
-            var user_one = new User {
+            var userOne = new User {
                 FirstName = "Andre",
                 LastName = "Runner",
                 EmailAddress = "andreeg@hiof.no",
@@ -17,7 +17,7 @@ namespace ProductivityApp.ConsoleApp
                 DateOfBirth = DateTime.Now
             };
 
-            var user_two = new User
+            var userTwo = new User
             {
                 FirstName = "Test",
                 LastName = "Testy",
@@ -26,41 +26,44 @@ namespace ProductivityApp.ConsoleApp
                 DateOfBirth = DateTime.Now
             };
 
-            var workspace_one = new Workspace
+            var workspaceOne = new Workspace
             {
                 Name = "My Workspace",
                 DateAdded = DateTime.Now,
-                CreatedByUser = user_two
+                CreatedByUser = userTwo
             };
 
-            var project_one = new Project
+            var projectOne = new Project
             {
                 ProjectName = ".NET",
-                Workspace = workspace_one
+                Workspace = workspaceOne
             };
 
-            var tag_one = new Tag
-            {
-                Name = "Random",
-                Description = "Something"
-            };
+            //var tag_one = new Tag
+            //{
+            //    Name = "Random",
+            //    Description = "Something"
+            //};
 
-            var session_one = new Session
+           
+            //session_one.Tags.Add(new SessionTag() { Session = session_one, Tag = tag_one });
+            using var db = new ProductivityContext();
+
+            db.Users.Add(userTwo);
+            db.Workspaces.Add(workspaceOne);
+            db.Projects.Add(projectOne);
+            db.SaveChanges();
+
+            var sessionOne = new Session
             {
                 Description = "Writing some examples",
                 StartTime = DateTime.Now,
                 EndTime = DateTime.Now,
-                User = user_two,
-                Project = project_one
+                UserId = userTwo.UserId,
+                ProjectId = projectOne.ProjectId
             };
 
-            session_one.Tags.Add(new SessionTag() { Session = session_one, Tag = tag_one });
-            using var db = new ProductivityContext();
-
-            db.Users.Add(user_two);
-            db.Workspaces.Add(workspace_one);
-            db.Projects.Add(project_one);
-            db.Sessions.Add(session_one);
+            db.Sessions.Add(sessionOne);
 
             db.SaveChanges();
         }

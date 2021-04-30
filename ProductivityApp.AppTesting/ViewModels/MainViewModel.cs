@@ -20,7 +20,7 @@ namespace ProductivityApp.AppTesting.ViewModels
 
         private bool _startSessionBtnEnabled = true;
         private bool _stopSessionBtnEnabled;
-        
+
         private Session _session = new Session();
 
         public ObservableCollection<Session> Sessions { get; set; } = new ObservableCollection<Session>();
@@ -29,10 +29,10 @@ namespace ProductivityApp.AppTesting.ViewModels
         public MainViewModel()
         {
             var timer = new DispatcherTimer();
+
             timer.Tick += Timer_Tick;
             timer.Interval = new TimeSpan(0, 0, 1);
             timer.Start();
-
             StartSession = new RelayCommand<string>(register =>
             {
                 _session.Description = _sessionDescription;
@@ -46,15 +46,12 @@ namespace ProductivityApp.AppTesting.ViewModels
             {
                 StopSessionBtnEnabled = false;
                 _session.EndTime = DateTime.Now;
-
-                var user = await _dataAccess.GetEntryFromDatabase<User>("users", 1);
-                _session.User = user;
+                _session.UserId = 1;
+                _session.ProjectId = null;
 
                 try
                 {
-                    // TODO: Doesn't save when user is set to session
-                    // https://stackoverflow.com/questions/50307633/how-do-i-postasync-with-multiple-simple-types
-                    await _dataAccess.AddEntryToDatabase("sessions", _session);
+                    await _dataAccess.AddEntryToDatabase("Sessions", _session);
                 }
                 catch (Exception e)
                 {
@@ -69,20 +66,11 @@ namespace ProductivityApp.AppTesting.ViewModels
             });
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
         private void Timer_Tick(object sender, object e)
         {
             ElapsedTime = !StartSessionBtnEnabled ? (DateTime.Now - _session.StartTime).ToString(@"hh\:mm\:ss") : string.Empty;
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
         internal async Task LoadSessionsAsync()
         {
             var sessions = await _dataAccess.GetDataFromUri<Session>("sessions");
@@ -105,9 +93,6 @@ namespace ProductivityApp.AppTesting.ViewModels
             }
         }
 
-        /// <summary>
-        /// getter and setters for the property responsible for enabling the start session button
-        /// </summary>
         public bool StartSessionBtnEnabled
         {
             get => _startSessionBtnEnabled;

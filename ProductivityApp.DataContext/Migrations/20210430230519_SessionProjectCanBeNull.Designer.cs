@@ -10,8 +10,8 @@ using ProductivityApp.DataAccess;
 namespace ProductivityApp.DataAccess.Migrations
 {
     [DbContext(typeof(ProductivityContext))]
-    [Migration("20210325200149_AddedProjectName")]
-    partial class AddedProjectName
+    [Migration("20210430230519_SessionProjectCanBeNull")]
+    partial class SessionProjectCanBeNull
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -83,7 +83,7 @@ namespace ProductivityApp.DataAccess.Migrations
                     b.Property<DateTime>("StartTime")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("UserId")
+                    b.Property<int>("UserId")
                         .HasColumnType("int");
 
                     b.HasKey("SessionId");
@@ -107,7 +107,7 @@ namespace ProductivityApp.DataAccess.Migrations
 
                     b.HasIndex("TagId");
 
-                    b.ToTable("SessionTag");
+                    b.ToTable("SessionTags");
                 });
 
             modelBuilder.Entity("ProductivityApp.Model.Tag", b =>
@@ -197,13 +197,15 @@ namespace ProductivityApp.DataAccess.Migrations
 
             modelBuilder.Entity("ProductivityApp.Model.Session", b =>
                 {
-                    b.HasOne("ProductivityApp.Model.Project", "Project")
+                    b.HasOne("ProductivityApp.Model.Project", null)
                         .WithMany("Sessions")
                         .HasForeignKey("ProjectId");
 
-                    b.HasOne("ProductivityApp.Model.User", "User")
+                    b.HasOne("ProductivityApp.Model.User", null)
                         .WithMany("Sessions")
-                        .HasForeignKey("UserId");
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("ProductivityApp.Model.SessionTag", b =>
