@@ -6,6 +6,7 @@ using ProductivityApp.AppTesting.Helpers;
 using System.Windows.Input;
 using System;
 using System.Diagnostics;
+using System.Linq;
 using Windows.UI.Xaml;
 using System.Threading.Tasks;
 
@@ -13,6 +14,8 @@ namespace ProductivityApp.AppTesting.ViewModels
 {
     public class MainViewModel : ViewModelBase
     {
+        // NOTE: This class does not have generic properties, but it will be added in the future to make the code more readable
+
         public ICommand StartSession, StopSession;
 
         private string _sessionDescription = string.Empty;
@@ -21,9 +24,16 @@ namespace ProductivityApp.AppTesting.ViewModels
         private bool _startSessionBtnEnabled = true;
         private bool _stopSessionBtnEnabled;
 
+        private string _projectSearchField = string.Empty;
+
+
         private Session _session = new Session();
 
         public ObservableCollection<Session> Sessions { get; set; } = new ObservableCollection<Session>();
+        public ObservableCollection<Project> Projects { get; set; } = new ObservableCollection<Project>();
+
+        private ObservableCollection<Project> _queriedProjects = new ObservableCollection<Project>();
+
         private readonly CrudOperations _dataAccess = new CrudOperations();
 
         public MainViewModel()
@@ -80,13 +90,20 @@ namespace ProductivityApp.AppTesting.ViewModels
                     Sessions.Add(session);
         }
 
+        internal async Task LoadProjectsASync()
+        {
+            var projects = await _dataAccess.GetDataFromUri<Project>("projects");
+            foreach (var project in projects)
+                if (!string.IsNullOrEmpty(project.ProjectName))
+                    Projects.Add(project);
+        }
+
         public string ElapsedTime
         {
             get => _elapsedTime;
             set
             {
                 if (Equals(_elapsedTime, value)) return;
-
 
                 _elapsedTime = value;
                 RaisePropertyChanged();
@@ -127,6 +144,37 @@ namespace ProductivityApp.AppTesting.ViewModels
                 _sessionDescription = value;
                 RaisePropertyChanged();
             }
+        }
+
+        public string ProjectSearchField
+        {
+            get => _projectSearchField;
+            set
+            {
+                if (Equals(_projectSearchField, value)) return;
+
+                _projectSearchField = value;
+                RaisePropertyChanged();
+                Search();
+            }
+        }
+
+        public ObservableCollection<Project> QueriedProjects
+        {
+            get => _queriedProjects;
+            set
+            {
+                if (Equals(_queriedProjects, value)) return;
+
+                _queriedProjects = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        internal void Search()
+        {
+            QueriedProjects = !string.IsNullOrEmpty(ProjectSearchField) ?
+                new ObservableCollection<Project>(Projects.Where(d => d.ProjectName.Contains(ProjectSearchField))) : new ObservableCollection<Project>();
         }
     }
 }

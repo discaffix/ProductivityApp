@@ -38,6 +38,25 @@
                         Margin="15,5,0,0"
                         IsEnabled = "{x:Bind ViewModel.StopSessionBtnEnabled, Mode=OneWay}"
                         Command="{x:Bind ViewModel.StopSession}"/>
+                    <Button
+                        Margin="15,5,0,0"
+                        Content="Project">
+                        <Button.Flyout>
+                            <Flyout Placement="Bottom">
+                                <StackPanel>
+                                    <TextBox PlaceholderText="Search for project" Text = "{x:Bind ViewModel.ProjectSearchField, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                    <!--<TextBlock Text="{x:Bind ViewModel.ProjectSearchField, Mode=OneWay}"/>-->
+                                    <ListView ItemsSource="{x:Bind ViewModel.QueriedProjects, Mode=OneWay}">
+                                        <ListView.ItemTemplate>
+                                            <DataTemplate>
+                                                <TextBlock Text="{Binding ProjectName}"/>
+                                            </DataTemplate>
+                                        </ListView.ItemTemplate>
+                                    </ListView>
+                                </StackPanel>
+                            </Flyout>
+                        </Button.Flyout>
+                    </Button>
                     <TextBlock Text="{x:Bind ViewModel.ElapsedTime, Mode=OneWay}"
                                HorizontalAlignment="Center"
                                VerticalAlignment="Center"

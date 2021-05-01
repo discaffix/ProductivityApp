@@ -143,6 +143,7 @@
     <Compile Include="DataAccess\CrudOperations.cs" />
     <Compile Include="DataAccess\Sessions.cs" />
     <Compile Include="Helpers\MenuNavigationHelper.cs" />
+    <Compile Include="Helpers\MyProp.cs" />
     <Compile Include="Helpers\RelayCommand.cs" />
     <Compile Include="Helpers\SettingsStorageExtensions.cs" />
     <Compile Include="Services\ActivationService.cs" />
