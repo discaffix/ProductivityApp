@@ -2,13 +2,15 @@
 using GalaSoft.MvvmLight;
 using ProductivityApp.Model;
 using ProductivityApp.AppTesting.DataAccess;
-using ProductivityApp.AppTesting.Helpers;
 using System.Windows.Input;
 using System;
 using System.Diagnostics;
 using System.Linq;
 using Windows.UI.Xaml;
 using System.Threading.Tasks;
+using Windows.System;
+using Windows.UI.Xaml.Input;
+using GalaSoft.MvvmLight.Command;
 
 namespace ProductivityApp.AppTesting.ViewModels
 {
@@ -16,7 +18,7 @@ namespace ProductivityApp.AppTesting.ViewModels
     {
         // NOTE: This class does not have generic properties, but it will be added in the future to make the code more readable
 
-        public ICommand StartSession, StopSession;
+        public ICommand StartSession, StopSession, SearchFieldEnterCommand;
 
         private string _sessionDescription = string.Empty;
         private string _elapsedTime = string.Empty;
@@ -43,7 +45,7 @@ namespace ProductivityApp.AppTesting.ViewModels
             timer.Tick += Timer_Tick;
             timer.Interval = new TimeSpan(0, 0, 1);
             timer.Start();
-            StartSession = new RelayCommand<string>(register =>
+            StartSession = new Helpers.RelayCommand<string>(register =>
             {
                 _session.Description = _sessionDescription;
                 _session.StartTime = DateTime.Now;
@@ -52,12 +54,12 @@ namespace ProductivityApp.AppTesting.ViewModels
                 StopSessionBtnEnabled = true;
             });
 
-            StopSession = new RelayCommand<string>(async login =>
+            StopSession = new Helpers.RelayCommand<string>(async login =>
             {
                 StopSessionBtnEnabled = false;
                 _session.EndTime = DateTime.Now;
                 _session.UserId = 1;
-                _session.ProjectId = null;
+                _session.ProjectId = 5;
 
                 try
                 {
@@ -74,6 +76,28 @@ namespace ProductivityApp.AppTesting.ViewModels
                     SessionDescription = string.Empty;
                 }
             });
+
+            SearchFieldEnterCommand = new Helpers.RelayCommand<KeyRoutedEventArgs>( async searchFieldEnter =>
+            {
+                // When the enter key is pressed in the search field
+                int returnedProjectId;
+
+                if (searchFieldEnter.Key == VirtualKey.Enter)
+                {
+                    if (string.IsNullOrWhiteSpace(ProjectSearchField) || ProjectSearchField.Length < 3) return;
+
+                    // create a new project object
+                    var project = new Project() {ProjectName = ProjectSearchField};
+
+                    // TODO: do something with returnedProjectId
+                    project.ProjectName = ProjectSearchField;
+                    var success = int.TryParse(await _dataAccess.AddEntryToDatabase("projects", project), out returnedProjectId);
+
+                    // reload project if a value has been returned and parsed
+                    if (success)
+                        await LoadProjectsASync();
+                }
+            });
         }
 
         private void Timer_Tick(object sender, object e)
@@ -86,16 +110,21 @@ namespace ProductivityApp.AppTesting.ViewModels
             var sessions = await _dataAccess.GetDataFromUri<Session>("sessions");
 
             foreach (var session in sessions)
-                if (!string.IsNullOrEmpty(session.Description))
+                if (!string.IsNullOrWhiteSpace(session.Description))
                     Sessions.Add(session);
         }
 
         internal async Task LoadProjectsASync()
         {
+            Projects = new ObservableCollection<Project>();
+
             var projects = await _dataAccess.GetDataFromUri<Project>("projects");
             foreach (var project in projects)
-                if (!string.IsNullOrEmpty(project.ProjectName))
+                if (!string.IsNullOrWhiteSpace(project.ProjectName))
                     Projects.Add(project);
+
+
+            Search();
         }
 
         public string ElapsedTime
@@ -174,7 +203,7 @@ namespace ProductivityApp.AppTesting.ViewModels
         internal void Search()
         {
             QueriedProjects = !string.IsNullOrEmpty(ProjectSearchField) ?
-                new ObservableCollection<Project>(Projects.Where(d => d.ProjectName.Contains(ProjectSearchField))) : new ObservableCollection<Project>();
+                new ObservableCollection<Project>(Projects.Where(d => d.ProjectName.ToLower().Contains(ProjectSearchField.ToLower()))) : new ObservableCollection<Project>();
         }
     }
 }

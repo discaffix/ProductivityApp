@@ -4,6 +4,8 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
+    xmlns:core="using:Microsoft.Xaml.Interactions.Core"
 
     Style="{StaticResource PageStyle}"
     mc:Ignorable="d" Loaded="Page_LoadedAsync">
@@ -44,7 +46,15 @@
                         <Button.Flyout>
                             <Flyout Placement="Bottom">
                                 <StackPanel>
-                                    <TextBox PlaceholderText="Search for project" Text = "{x:Bind ViewModel.ProjectSearchField, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                    <TextBox
+                                        PlaceholderText="Search for project"
+                                        Text = "{x:Bind ViewModel.ProjectSearchField, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                                        <interactivity:Interaction.Behaviors>
+                                            <core:EventTriggerBehavior EventName="KeyDown">
+                                                <core:InvokeCommandAction Command="{x:Bind ViewModel.SearchFieldEnterCommand}" />
+                                            </core:EventTriggerBehavior>
+                                        </interactivity:Interaction.Behaviors>
+                                    </TextBox>
                                     <!--<TextBlock Text="{x:Bind ViewModel.ProjectSearchField, Mode=OneWay}"/>-->
                                     <ListView ItemsSource="{x:Bind ViewModel.QueriedProjects, Mode=OneWay}">
                                         <ListView.ItemTemplate>
@@ -63,7 +73,7 @@
                                Margin="25,0,0,0"/>
                 </StackPanel>
 
-                <ListView x:Name="Sessions" ItemsSource="{x:Bind ViewModel.Sessions}">
+                <ListView ItemsSource="{x:Bind ViewModel.Sessions}">
                     <ListView.ItemTemplate>
                         <DataTemplate>
                             <TextBlock Text="{Binding Description}"/>

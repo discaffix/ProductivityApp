@@ -42,21 +42,23 @@ namespace ProductivityApp.AppTesting.DataAccess
             return data;
         }
 
-        internal async Task<bool> AddEntryToDatabase<T>(string directTablePath, T item) where T : class
+        internal async Task<string> AddEntryToDatabase<T>(string directTablePath, T item) where T : class
         {
             try
             {
                 _uri = new Uri(BaseUri + directTablePath);
                 var json = JsonConvert.SerializeObject(item);
                 var result = await _httpClient.PostAsync(_uri, new StringContent(json, Encoding.UTF8, "application/json"));
-                return result.IsSuccessStatusCode;
+                return result.Headers.Location.Segments[3];
+                
+                //return result.IsSuccessStatusCode;
 
             } catch (HttpRequestException e)
             {
                 Debug.Write(e);
             }
 
-            return false;
+            return "";
         }
 
         internal async Task<bool> DeleteDatabaseEntry<T>(string directTablePath, T item)
