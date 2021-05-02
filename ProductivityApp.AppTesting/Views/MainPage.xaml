@@ -10,7 +10,7 @@
     Style="{StaticResource PageStyle}"
     mc:Ignorable="d" Loaded="Page_LoadedAsync">
 
-    <Grid x:Name="ContentArea" Margin="{StaticResource MediumLeftRightMargin}">
+    <Grid Margin="{StaticResource MediumLeftRightMargin}">
         <Grid.RowDefinitions>
             <RowDefinition Height="48" />
             <RowDefinition Height="*" />
@@ -59,7 +59,7 @@
                             <Flyout Placement="Bottom">
                                 <StackPanel>
                                     <TextBox
-                                        PlaceholderText="Search for project"
+                                        PlaceholderText="Search for project or create a new project by typing and pressing enter."
                                         Text = "{x:Bind ViewModel.ProjectSearchField, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
                                         <interactivity:Interaction.Behaviors>
                                             <core:EventTriggerBehavior EventName="KeyDown">
@@ -85,10 +85,26 @@
                                Margin="25,0,0,0"/>
                 </StackPanel>
 
-                <ListView ItemsSource="{x:Bind ViewModel.Sessions}">
+                <ListView ItemsSource="{x:Bind ViewModel.Sessions, Mode=OneWay}">
                     <ListView.ItemTemplate>
                         <DataTemplate>
-                            <TextBlock Text="{Binding Description}"/>
+                            <!--<TextBlock Text="{Binding Description} "/>-->
+                            <Grid Margin="0,10,0,10">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="*"/>
+                                    <RowDefinition Height="*"/>
+                                </Grid.RowDefinitions>
+
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+
+                                <TextBlock Text="{Binding Description}"/>
+                                <TextBlock Grid.Row="1" Grid.Column="0" Text="{Binding StartTime}"></TextBlock>
+                                <TextBlock Grid.Row="1" Grid.Column="0" Text="{Binding StartTime}"></TextBlock>
+                                <TextBlock Margin="20,0,0,0" Grid.Row="1" Grid.Column="1" Text="{Binding EndTime}"></TextBlock>
+                            </Grid>
                         </DataTemplate>
                     </ListView.ItemTemplate>
                 </ListView>

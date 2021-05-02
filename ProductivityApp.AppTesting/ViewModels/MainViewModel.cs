@@ -30,11 +30,11 @@ namespace ProductivityApp.AppTesting.ViewModels
 
 
         private Session _session = new Session();
-
-        public ObservableCollection<Session> Sessions { get; set; } = new ObservableCollection<Session>();
+        
         public ObservableCollection<Project> Projects { get; set; } = new ObservableCollection<Project>();
 
         private ObservableCollection<Project> _queriedProjects = new ObservableCollection<Project>();
+        private ObservableCollection<Session> _sessions = new ObservableCollection<Session>();
 
         private readonly CrudOperations _dataAccess = new CrudOperations();
 
@@ -74,6 +74,8 @@ namespace ProductivityApp.AppTesting.ViewModels
                     StartSessionBtnEnabled = true;
                     _session = new Session();
                     SessionDescription = string.Empty;
+
+                    await LoadSessionsAsync();
                 }
             });
 
@@ -107,6 +109,8 @@ namespace ProductivityApp.AppTesting.ViewModels
 
         internal async Task LoadSessionsAsync()
         {
+            Sessions = new ObservableCollection<Session>();
+
             var sessions = await _dataAccess.GetDataFromUri<Session>("sessions");
 
             foreach (var session in sessions)
@@ -185,6 +189,18 @@ namespace ProductivityApp.AppTesting.ViewModels
                 _projectSearchField = value;
                 RaisePropertyChanged();
                 Search();
+            }
+        }
+
+        public ObservableCollection<Session> Sessions
+        {
+            get => _sessions;
+            set
+            {
+                if (Equals(_sessions, value)) return;
+
+                _sessions = value;
+                RaisePropertyChanged();
             }
         }
 
