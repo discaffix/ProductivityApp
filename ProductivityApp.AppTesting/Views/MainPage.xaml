@@ -23,11 +23,23 @@
         <Grid
             Grid.Row="1" 
             Background="{ThemeResource SystemControlPageBackgroundChromeLowBrush}">
-            
+
             <StackPanel>
-                <TextBox
-                    Text="{x:Bind ViewModel.SessionDescription, Mode=TwoWay}"
-                    PlaceholderText="What are you currently working on?" />
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="40"/>
+                        </Grid.ColumnDefinitions>
+                        
+                        <TextBox
+                            Text="{x:Bind ViewModel.SessionDescription, Mode=TwoWay}"
+                            PlaceholderText="What are you currently working on?"
+                            />
+                    <Button Grid.Column="1">
+                        <Image Source="/Assets/Square44x44Logo.png" AutomationProperties.Name="Slice"/>
+                    </Button>
+                </Grid>
+                    
                 <StackPanel
                     Orientation="Horizontal">
                     <Button
@@ -42,7 +54,7 @@
                         Command="{x:Bind ViewModel.StopSession}"/>
                     <Button
                         Margin="15,5,0,0"
-                        Content="Project">
+                        Content="Selected Project">
                         <Button.Flyout>
                             <Flyout Placement="Bottom">
                                 <StackPanel>
