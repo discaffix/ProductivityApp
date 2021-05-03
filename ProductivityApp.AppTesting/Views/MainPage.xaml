@@ -35,8 +35,35 @@
                             Text="{x:Bind ViewModel.SessionDescription, Mode=TwoWay}"
                             PlaceholderText="What are you currently working on?"
                             />
-                    <Button Grid.Column="1">
-                        <Image Source="/Assets/Square44x44Logo.png" AutomationProperties.Name="Slice"/>
+                        <Button Grid.Column="0"
+                                Content="+ Click here to add details."
+                                HorizontalAlignment="Stretch"
+                                HorizontalContentAlignment="left" 
+                                Visibility="Collapsed"
+                                IsEnabled="False">
+
+                            <Button.Background>
+                                <SolidColorBrush Opacity="0"/>
+                            </Button.Background>
+
+                            <Button.Foreground>
+                            Gray
+                            </Button.Foreground>
+                        </Button>
+                        <Button Margin="5" Background="LightGreen" AutomationProperties.Name="Pie" Grid.Column="1" Height="30">
+                        <Image Source="/Assets/xmark.png" AutomationProperties.Name="Slice"/>
+                        <Button.Flyout>
+                            <Flyout Placement="Right">
+                                <StackPanel>
+                                    <TextBlock Text="This is just a random test."/>
+
+                                    <TextBlock Text="This is just a random test."/>
+
+                                    <TextBlock Text="This is just a random test."/>
+                                    <TextBlock Text="This is just a random test."/>
+                                </StackPanel>
+                            </Flyout>
+                        </Button.Flyout>
                     </Button>
                 </Grid>
                     
