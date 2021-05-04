@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using GalaSoft.MvvmLight;
 
 namespace ProductivityApp.AppTesting.Helpers
 {
-    public class MyProp<T>
+    public class MyProp<T> : ObservableObject
     {
         private T _value;
 
@@ -18,7 +14,18 @@ namespace ProductivityApp.AppTesting.Helpers
                 if(Equals(_value, value)) return;
 
                 _value = value;
+                RaisePropertyChanged();
             }
+        }
+
+        public static implicit operator T(MyProp<T> value)
+        {
+            return value.Value;
+        }
+
+        public static implicit operator MyProp<T>(T value)
+        {
+            return new MyProp<T> { Value = value };
         }
     }
 }

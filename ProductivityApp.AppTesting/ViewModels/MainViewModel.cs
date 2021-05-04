@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using Windows.System;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
+using ProductivityApp.AppTesting.Helpers;
 
 namespace ProductivityApp.AppTesting.ViewModels
 {
@@ -24,6 +25,9 @@ namespace ProductivityApp.AppTesting.ViewModels
         private string _elapsedTime = string.Empty;
 
         private bool _startSessionBtnEnabled = true;
+
+        //public MyProp<bool> StartSessionBtnEnabled { get; set; }
+
         private bool _stopSessionBtnEnabled;
 
         private string _projectSearchField = string.Empty;
