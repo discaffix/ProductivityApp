@@ -6,9 +6,14 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
     xmlns:core="using:Microsoft.Xaml.Interactions.Core"
+    xmlns:converters="using:ProductivityApp.AppTesting.Converters"
 
     Style="{StaticResource PageStyle}"
     mc:Ignorable="d" Loaded="Page_LoadedAsync">
+
+    <Page.Resources>
+        <converters:AutoSuggestTextChangedParameterConverter x:Key="ArgsConverter"/>
+    </Page.Resources>
 
     <Grid Margin="{StaticResource MediumLeftRightMargin}">
         <Grid.RowDefinitions>
@@ -85,7 +90,25 @@
                         <Button.Flyout>
                             <Flyout Placement="Bottom">
                                 <StackPanel>
-                                    <TextBox
+                                    <AutoSuggestBox
+                                        MinWidth="355"
+                                        ItemsSource="{x:Bind ViewModel.QueriedProjects, Mode=OneWay}"
+                                        Text = "{x:Bind ViewModel.ProjectSearchField, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                                        <interactivity:Interaction.Behaviors>
+                                            <core:EventTriggerBehavior EventName="TextChanged">
+                                                <core:InvokeCommandAction Command="{x:Bind ViewModel.TextChangedCommand}" />
+                                            </core:EventTriggerBehavior>
+                                        </interactivity:Interaction.Behaviors>
+
+                                        <AutoSuggestBox.ItemTemplate>
+                                            <DataTemplate>
+                                                <TextBlock Text="{Binding ProjectName}"/>
+                                            </DataTemplate>
+                                        </AutoSuggestBox.ItemTemplate>
+                                    </AutoSuggestBox>
+
+
+                                    <!--<TextBox
                                         PlaceholderText="Search for project or create a new project by typing and pressing enter."
                                         Text = "{x:Bind ViewModel.ProjectSearchField, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
                                         <interactivity:Interaction.Behaviors>
@@ -94,14 +117,14 @@
                                             </core:EventTriggerBehavior>
                                         </interactivity:Interaction.Behaviors>
                                     </TextBox>
-                                    <!--<TextBlock Text="{x:Bind ViewModel.ProjectSearchField, Mode=OneWay}"/>-->
+                                    --><!--<TextBlock Text="{x:Bind ViewModel.ProjectSearchField, Mode=OneWay}"/>--><!--
                                     <ListView ItemsSource="{x:Bind ViewModel.QueriedProjects, Mode=OneWay}">
                                         <ListView.ItemTemplate>
                                             <DataTemplate>
                                                 <TextBlock Text="{Binding ProjectName}"/>
                                             </DataTemplate>
                                         </ListView.ItemTemplate>
-                                    </ListView>
+                                    </ListView>-->
                                 </StackPanel>
                             </Flyout>
                         </Button.Flyout>

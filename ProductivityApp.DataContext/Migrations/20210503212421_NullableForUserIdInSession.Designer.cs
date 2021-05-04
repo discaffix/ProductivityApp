@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ProductivityApp.DataAccess;
 
 namespace ProductivityApp.DataAccess.Migrations
 {
     [DbContext(typeof(ProductivityContext))]
-    partial class ProductivityContextModelSnapshot : ModelSnapshot
+    [Migration("20210503212421_NullableForUserIdInSession")]
+    partial class NullableForUserIdInSession
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

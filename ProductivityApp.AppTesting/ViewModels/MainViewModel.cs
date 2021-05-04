@@ -9,8 +9,8 @@ using System.Linq;
 using Windows.UI.Xaml;
 using System.Threading.Tasks;
 using Windows.System;
+using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
-using GalaSoft.MvvmLight.Command;
 
 namespace ProductivityApp.AppTesting.ViewModels
 {
@@ -18,7 +18,7 @@ namespace ProductivityApp.AppTesting.ViewModels
     {
         // NOTE: This class does not have generic properties, but it will be added in the future to make the code more readable
 
-        public ICommand StartSession, StopSession, SearchFieldEnterCommand;
+        public ICommand StartSession, StopSession, SearchFieldEnterCommand, TextChangedCommand;
 
         private string _sessionDescription = string.Empty;
         private string _elapsedTime = string.Empty;
@@ -28,7 +28,7 @@ namespace ProductivityApp.AppTesting.ViewModels
 
         private string _projectSearchField = string.Empty;
 
-
+        private int _returnedProjectId = 0;
         private Session _session = new Session();
         
         public ObservableCollection<Project> Projects { get; set; } = new ObservableCollection<Project>();
@@ -45,6 +45,27 @@ namespace ProductivityApp.AppTesting.ViewModels
             timer.Tick += Timer_Tick;
             timer.Interval = new TimeSpan(0, 0, 1);
             timer.Start();
+
+            // TODO: AutoSuggestBox can only send arguments, and not the text (via sender)
+            TextChangedCommand = new Helpers.RelayCommand<AutoSuggestBoxTextChangedEventArgs>(args =>
+            {
+                var selectedItems = new ObservableCollection<Project>();
+                var text = ProjectSearchField.ToLower().Split(" ");
+
+                foreach (var project in Projects)
+                {
+                    var foundProjects = text.All((key) => project.ProjectName.ToLower().Contains(key));
+
+                    if (foundProjects)
+                        selectedItems.Add(project);
+                }
+
+                if (selectedItems.Count == 0)
+                    selectedItems.Add(new Project() { ProjectName = "No Project Found" });
+
+                QueriedProjects = selectedItems;
+            });
+
             StartSession = new Helpers.RelayCommand<string>(register =>
             {
                 _session.Description = _sessionDescription;
@@ -58,8 +79,8 @@ namespace ProductivityApp.AppTesting.ViewModels
             {
                 StopSessionBtnEnabled = false;
                 _session.EndTime = DateTime.Now;
-                _session.UserId = 1;
-                _session.ProjectId = 5;
+                _session.UserId = null;
+                _session.ProjectId = null;
 
                 try
                 {
@@ -82,23 +103,20 @@ namespace ProductivityApp.AppTesting.ViewModels
             SearchFieldEnterCommand = new Helpers.RelayCommand<KeyRoutedEventArgs>( async searchFieldEnter =>
             {
                 // When the enter key is pressed in the search field
-                int returnedProjectId;
 
-                if (searchFieldEnter.Key == VirtualKey.Enter)
-                {
-                    if (string.IsNullOrWhiteSpace(ProjectSearchField) || ProjectSearchField.Length < 3) return;
+                if (searchFieldEnter.Key != VirtualKey.Enter) return;
+                if (string.IsNullOrWhiteSpace(ProjectSearchField) || ProjectSearchField.Length < 3) return;
 
-                    // create a new project object
-                    var project = new Project() {ProjectName = ProjectSearchField};
+                // create a new project object
+                var project = new Project() {ProjectName = ProjectSearchField};
 
-                    // TODO: do something with returnedProjectId
-                    project.ProjectName = ProjectSearchField;
-                    var success = int.TryParse(await _dataAccess.AddEntryToDatabase("projects", project), out returnedProjectId);
+                // TODO: do something with returnedProjectId
+                project.ProjectName = ProjectSearchField;
+                var success = int.TryParse(await _dataAccess.AddEntryToDatabase("projects", project), out _returnedProjectId);
 
-                    // reload project if a value has been returned and parsed
-                    if (success)
-                        await LoadProjectsASync();
-                }
+                // reload project if a value has been returned and parsed
+                if (success)
+                    await LoadProjectsASync();
             });
         }
 
@@ -127,8 +145,6 @@ namespace ProductivityApp.AppTesting.ViewModels
                 if (!string.IsNullOrWhiteSpace(project.ProjectName))
                     Projects.Add(project);
 
-
-            Search();
         }
 
         public string ElapsedTime
@@ -137,7 +153,6 @@ namespace ProductivityApp.AppTesting.ViewModels
             set
             {
                 if (Equals(_elapsedTime, value)) return;
-
                 _elapsedTime = value;
                 RaisePropertyChanged();
             }
@@ -149,7 +164,6 @@ namespace ProductivityApp.AppTesting.ViewModels
             set
             {
                 if (Equals(_startSessionBtnEnabled, value)) return;
-
                 _startSessionBtnEnabled = value;
                 RaisePropertyChanged();
             }
@@ -161,7 +175,6 @@ namespace ProductivityApp.AppTesting.ViewModels
             set
             {
                 if (Equals(_stopSessionBtnEnabled, value)) return;
-
                 _stopSessionBtnEnabled = value;
                 RaisePropertyChanged();
             }
@@ -173,7 +186,6 @@ namespace ProductivityApp.AppTesting.ViewModels
             set
             {
                 if (string.Equals(_sessionDescription, value)) return;
-
                 _sessionDescription = value;
                 RaisePropertyChanged();
             }
@@ -188,7 +200,6 @@ namespace ProductivityApp.AppTesting.ViewModels
 
                 _projectSearchField = value;
                 RaisePropertyChanged();
-                Search();
             }
         }
 
@@ -198,7 +209,6 @@ namespace ProductivityApp.AppTesting.ViewModels
             set
             {
                 if (Equals(_sessions, value)) return;
-
                 _sessions = value;
                 RaisePropertyChanged();
             }
@@ -210,16 +220,9 @@ namespace ProductivityApp.AppTesting.ViewModels
             set
             {
                 if (Equals(_queriedProjects, value)) return;
-
                 _queriedProjects = value;
                 RaisePropertyChanged();
             }
-        }
-
-        internal void Search()
-        {
-            QueriedProjects = !string.IsNullOrEmpty(ProjectSearchField) ?
-                new ObservableCollection<Project>(Projects.Where(d => d.ProjectName.ToLower().Contains(ProjectSearchField.ToLower()))) : new ObservableCollection<Project>();
         }
     }
 }
