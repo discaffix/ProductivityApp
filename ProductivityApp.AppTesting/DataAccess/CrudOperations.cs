@@ -35,9 +35,9 @@ namespace ProductivityApp.AppTesting.DataAccess
         internal async Task<T> GetEntryFromDatabase<T>(string directTablePath, int value) where T : class
         {
             _uri = new Uri(BaseUri + directTablePath);
-
-            var result = await _httpClient.GetAsync($"{_uri}/{value}");
-            var json = await result.Content.ReadAsStringAsync();
+            
+            var result = await _httpClient.GetAsync($"{_uri}/{value}").ConfigureAwait(false);
+            var json = await result.Content.ReadAsStringAsync().ConfigureAwait(false);
             var data = JsonConvert.DeserializeObject<T>(json);
             return data;
         }

@@ -42,14 +42,23 @@ namespace ProductivityApp.DataAccess
         /// typically define extension methods on this object that allow you to configure the context.</param>
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            SqlConnectionStringBuilder builder = new SqlConnectionStringBuilder
+            var builder = new SqlConnectionStringBuilder
             {
                 DataSource = "(localdb)\\MSSQLLocalDB",
                 InitialCatalog = "ProductivityCatalog",
                 IntegratedSecurity = true
             };
 
-            optionsBuilder.UseSqlServer(builder.ConnectionString.ToString());
+            var donauBuilder = new SqlConnectionStringBuilder
+            {
+                DataSource = "donau.hiof.no",
+                InitialCatalog = "andreeg",
+                UserID = "andreeg",
+                Password = "xL=7gudh"
+            };
+
+
+            optionsBuilder.UseSqlServer(donauBuilder.ConnectionString.ToString());
         }
 
         /// <summary>

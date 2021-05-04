@@ -18,9 +18,9 @@ namespace ProductivityApp.Model
 
         public DateTime EndTime { get; set; }
 
-        public int? UserId { get; set; }
+        public int UserId { get; set; }
 
-        public int? ProjectId { get; set; }
+        public int ProjectId { get; set; }
 
         public ICollection<SessionTag> Tags { get; set; } = new List<SessionTag>();
     }

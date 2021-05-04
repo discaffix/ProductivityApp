@@ -39,7 +39,15 @@ namespace ProductivityApp.Api
                 IntegratedSecurity = true
             };
 
-            services.AddDbContext<ProductivityContext>(options => options.UseSqlServer(builder.ConnectionString));
+            var donauBuilder = new SqlConnectionStringBuilder
+            {
+                DataSource = "donau.hiof.no",
+                InitialCatalog = "andreeg",
+                UserID = "andreeg",
+                Password = "xL=7gudh"
+            };
+
+            services.AddDbContext<ProductivityContext>(options => options.UseSqlServer(donauBuilder.ConnectionString));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -42,10 +42,11 @@ namespace ProductivityApp.AppTesting.ViewModels
 
         private readonly CrudOperations _dataAccess = new CrudOperations();
 
+
         public MainViewModel()
         {
             var timer = new DispatcherTimer();
-
+            
             timer.Tick += Timer_Tick;
             timer.Interval = new TimeSpan(0, 0, 1);
             timer.Start();
@@ -83,8 +84,8 @@ namespace ProductivityApp.AppTesting.ViewModels
             {
                 StopSessionBtnEnabled = false;
                 _session.EndTime = DateTime.Now;
-                _session.UserId = null;
-                _session.ProjectId = null;
+                _session.UserId = 1;
+                _session.ProjectId = 1;
 
                 try
                 {

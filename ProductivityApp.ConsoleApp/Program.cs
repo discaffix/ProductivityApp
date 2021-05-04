@@ -11,7 +11,7 @@ namespace ProductivityApp.ConsoleApp
             // user object
             var userOne = new User {
                 FirstName = "Andre",
-                LastName = "Runner",
+                LastName = "Hande",
                 EmailAddress = "andreeg@hiof.no",
                 Password = "InsaneGamer",
                 DateOfBirth = DateTime.Now
@@ -49,16 +49,16 @@ namespace ProductivityApp.ConsoleApp
             //session_one.Tags.Add(new SessionTag() { Session = session_one, Tag = tag_one });
             using var db = new ProductivityContext();
 
-            db.Users.Add(userTwo);
+            db.Users.Add(userOne);
             db.Workspaces.Add(workspaceOne);
             db.Projects.Add(projectOne);
             db.SaveChanges();
 
             var sessionOne = new Session
             {
-                Description = "Writing some examples",
+                Description = "Redesigning MainView in ProductivityApp.AppTesting",
                 StartTime = DateTime.Now,
-                EndTime = DateTime.Now,
+                EndTime = DateTime.Now.AddHours(5),
                 UserId = userTwo.UserId,
                 ProjectId = projectOne.ProjectId
             };
