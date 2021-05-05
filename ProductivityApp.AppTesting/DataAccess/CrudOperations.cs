@@ -29,7 +29,7 @@ namespace ProductivityApp.AppTesting.DataAccess
             }
 
             var json = await result.Content.ReadAsStringAsync();
-            return JsonConvert.DeserializeObject<T[]>(json); ;
+            return JsonConvert.DeserializeObject<T[]>(json);
         }
 
         internal async Task<T> GetEntryFromDatabase<T>(string directTablePath, int value) where T : class

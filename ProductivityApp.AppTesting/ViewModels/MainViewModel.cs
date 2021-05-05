@@ -51,7 +51,6 @@ namespace ProductivityApp.AppTesting.ViewModels
             timer.Interval = new TimeSpan(0, 0, 1);
             timer.Start();
 
-            // TODO: AutoSuggestBox can only send arguments, and not the text (via sender)
             TextChangedCommand = new Helpers.RelayCommand<AutoSuggestBoxTextChangedEventArgs>(args =>
             {
                 var selectedItems = new ObservableCollection<Project>();
