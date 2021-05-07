@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using Windows.System;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
+using GalaSoft.MvvmLight.Command;
 using ProductivityApp.AppTesting.Helpers;
 
 namespace ProductivityApp.AppTesting.ViewModels
@@ -19,18 +20,20 @@ namespace ProductivityApp.AppTesting.ViewModels
     {
         // NOTE: This class does not have generic properties, but it will be added in the future to make the code more readable
 
-        public ICommand StartSession, StopSession, SearchFieldEnterCommand, TextChangedCommand;
+        public ICommand StartSession, StopSession, SearchFieldEnterCommand, TextChangedCommand, OpenClosePaneCommand;
 
         private string _sessionDescription = string.Empty;
         private string _elapsedTime = string.Empty;
 
         private bool _startSessionBtnEnabled = true;
 
+        private bool _openPaneBtnEnabled;
         //public MyProp<bool> StartSessionBtnEnabled { get; set; }
 
         private bool _stopSessionBtnEnabled;
 
         private string _projectSearchField = string.Empty;
+
 
         private int _returnedProjectId = 0;
         private Session _session = new Session();
@@ -50,6 +53,11 @@ namespace ProductivityApp.AppTesting.ViewModels
             timer.Tick += Timer_Tick;
             timer.Interval = new TimeSpan(0, 0, 1);
             timer.Start();
+
+            OpenClosePaneCommand = new Helpers.RelayCommand<string>(openClose =>
+            {
+                OpenPaneBtnEnabled = !OpenPaneBtnEnabled;
+            });
 
             TextChangedCommand = new Helpers.RelayCommand<AutoSuggestBoxTextChangedEventArgs>(args =>
             {
@@ -104,6 +112,7 @@ namespace ProductivityApp.AppTesting.ViewModels
                 }
             });
 
+            // search
             SearchFieldEnterCommand = new Helpers.RelayCommand<KeyRoutedEventArgs>( async searchFieldEnter =>
             {
                 // When the enter key is pressed in the search field
@@ -173,6 +182,16 @@ namespace ProductivityApp.AppTesting.ViewModels
             }
         }
 
+        public bool OpenPaneBtnEnabled
+        {
+            get => _openPaneBtnEnabled;
+            set
+            {
+                if (Equals(_openPaneBtnEnabled, value)) return;
+                _openPaneBtnEnabled = value;
+                RaisePropertyChanged();
+            }
+        }
         public bool StopSessionBtnEnabled
         {
             get => _stopSessionBtnEnabled;

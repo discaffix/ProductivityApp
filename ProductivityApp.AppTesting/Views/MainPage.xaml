@@ -15,13 +15,13 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-        <SplitView PaneBackground="#301934" IsPaneOpen="True" PanePlacement="Right" DisplayMode="Inline">
+        <SplitView PaneBackground="#301934" IsPaneOpen="{x:Bind ViewModel.OpenPaneBtnEnabled, Mode=OneWay}" PanePlacement="Right" DisplayMode="Inline">
             <SplitView.Pane>
                 <StackPanel Padding="15">
                     <!--Project SearchBox-->
                     <TextBlock Text="Details"/>
-                    <TextBox MinWidth="150" Text="{x:Bind ViewModel.SessionDescription, Mode=TwoWay}" Margin="5"/>
-                    <AutoSuggestBox MinWidth="150" Margin="5" ItemsSource="{x:Bind ViewModel.QueriedProjects, Mode=OneWay}" Text="{x:Bind ViewModel.ProjectSearchField, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                    <TextBox MinWidth="150" PlaceholderText="What are you currently working on?" Text="{x:Bind ViewModel.SessionDescription, Mode=TwoWay}" Margin="5"/>
+                    <AutoSuggestBox PlaceholderText="Search for a Project"  MinWidth="150" Margin="5" ItemsSource="{x:Bind ViewModel.QueriedProjects, Mode=OneWay}" Text="{x:Bind ViewModel.ProjectSearchField, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
                         <interactivity:Interaction.Behaviors>
                             <core:EventTriggerBehavior EventName="TextChanged">
                                 <core:InvokeCommandAction Command="{x:Bind ViewModel.TextChangedCommand}" />
@@ -34,7 +34,16 @@
                         </AutoSuggestBox.ItemTemplate>
                     </AutoSuggestBox>
                     <TextBlock Text="Tags" Margin="0,10,0,0"/>
-                    <TextBox MinWidth="150" Text="{x:Bind ViewModel.SessionDescription, Mode=TwoWay}" Margin="5"/>
+                    <TextBox MinWidth="150" Text="{x:Bind ViewModel.SessionDescription, Mode=TwoWay}" Margin="5" PlaceholderText="Select a Tag"/>
+
+                    <TextBlock Text="Duration" Margin="0,10,0,0"/>
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                        <TextBox MinWidth="60" Margin="0,0,10,0"/>
+                        <TextBox MinWidth="60" Margin="5,0,10,0"/>
+                        <TextBlock MaxWidth="25" Margin="0,0,10,0" Text="->" VerticalAlignment="Center"/>
+                        <TextBox MinWidth="60"/>
+                    </StackPanel>
+                    <DatePicker  Margin="0,5,0,0"/> 
                     <StackPanel Orientation="Horizontal">
                         <!--Start Session-->
                         <Button Content="Start Session" Margin="0,5,0,0" IsEnabled="{x:Bind ViewModel.StartSessionBtnEnabled, Mode=OneWay}" Command="{x:Bind ViewModel.StartSession}" />
@@ -51,19 +60,22 @@
                         <ColumnDefinition Width="*" />
                         <ColumnDefinition Width="40" />
                     </Grid.ColumnDefinitions>
-                    <TextBox BorderBrush="#190805" BorderThickness="1" Text="{x:Bind ViewModel.SessionDescription, Mode=TwoWay}" PlaceholderText="What are you currently working on?" />
-                    <Button Grid.Column="0" Content="+ Click here to add details." HorizontalAlignment="Stretch" HorizontalContentAlignment="left" Visibility="Collapsed" IsEnabled="False">
+                        <TextBox
+                            Background="#453048" BorderBrush="#190805" BorderThickness="1" Text="{x:Bind ViewModel.SessionDescription, Mode=TwoWay}" PlaceholderText="What are you currently working on?"/>
+                    <Button
+                        
+                        Grid.Column="0" Content="+ Click here to add details." HorizontalAlignment="Stretch" HorizontalContentAlignment="left" Visibility="Collapsed" IsEnabled="False">
                         <Button.Background>
                             <SolidColorBrush Opacity="0" />
                         </Button.Background>
                         <Button.Foreground>Gray</Button.Foreground>
                     </Button>
-                    <Button Margin="5" Background="LightGreen" AutomationProperties.Name="Pie" Grid.Column="1" Height="30">
+                        <Button Margin="5" Background="#453048" AutomationProperties.Name="Pie" Grid.Column="1" Height="30" Command="{x:Bind ViewModel.OpenClosePaneCommand}">
                         <Image Source="/Assets/xmark.png" AutomationProperties.Name="Slice" />
-                        <Button.Flyout>
+                        <!--<Button.Flyout>
                             <Flyout Placement="Right">
                                 <StackPanel>
-                                    <!--Project SearchBox-->
+                                    --><!--Project SearchBox--><!--
                                     <TextBlock Text="Details"/>
                                     <TextBox MinWidth="150" Text="{x:Bind ViewModel.SessionDescription, Mode=TwoWay}" Margin="5"/>
                                     <AutoSuggestBox MinWidth="150" Margin="5" ItemsSource="{x:Bind ViewModel.QueriedProjects, Mode=OneWay}" Text="{x:Bind ViewModel.ProjectSearchField, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
@@ -79,14 +91,14 @@
                                         </AutoSuggestBox.ItemTemplate>
                                     </AutoSuggestBox>
                                     <StackPanel Orientation="Horizontal">
-                                        <!--Start Session-->
+                                        --><!--Start Session--><!--
                                         <Button Content="Start Session" Margin="0,5,0,0" IsEnabled="{x:Bind ViewModel.StartSessionBtnEnabled, Mode=OneWay}" Command="{x:Bind ViewModel.StartSession}" />
-                                        <!--Stop Session-->
+                                        --><!--Stop Session--><!--
                                         <Button Content="Stop Session" Margin="15,5,0,0" IsEnabled="{x:Bind ViewModel.StopSessionBtnEnabled, Mode=OneWay}" Command="{x:Bind ViewModel.StopSession}" />
                                     </StackPanel>
                                 </StackPanel>
                             </Flyout>
-                        </Button.Flyout>
+                        </Button.Flyout>-->
                     </Button>
                 </Grid>
                 <!--Temporary Buttons-->

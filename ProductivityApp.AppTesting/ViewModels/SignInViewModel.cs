@@ -63,7 +63,7 @@ namespace ProductivityApp.AppTesting.ViewModels
                 SimpleMethod();
             });
 
-            LoginCommand = new Helpers.RelayCommand<string>(async login =>
+            LoginCommand = new Helpers.RelayCommand<string>( login =>
             {
                 Debug.Print(_password + " " + _email);
                 MenuNavigationHelper.UpdateView(typeof(RegisterViewModel).FullName);
