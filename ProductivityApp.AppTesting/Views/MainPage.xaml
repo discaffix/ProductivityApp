@@ -53,7 +53,7 @@
                 </StackPanel>
             </SplitView.Pane>
 
-            <Grid Background="#240b07">
+            <Grid Background="#1d0f1f">
             <StackPanel>
                 <Grid>
                     <Grid.ColumnDefinitions>
