@@ -1,10 +1,12 @@
-﻿using GalaSoft.MvvmLight;
+﻿using System.ComponentModel;
+using GalaSoft.MvvmLight;
 
 namespace ProductivityApp.AppTesting.Helpers
 {
-    public class MyProp<T> : ObservableObject
+    public class MyProp<T> : INotifyPropertyChanged
     {
         private T _value;
+        public event PropertyChangedEventHandler PropertyChanged;
 
         public T Value
         {
@@ -14,7 +16,7 @@ namespace ProductivityApp.AppTesting.Helpers
                 if(Equals(_value, value)) return;
 
                 _value = value;
-                RaisePropertyChanged();
+                OnPropertyChanged(nameof(_value));
             }
         }
 
@@ -27,5 +29,8 @@ namespace ProductivityApp.AppTesting.Helpers
         {
             return new MyProp<T> { Value = value };
         }
+
+        protected void OnPropertyChanged(string propertyName)
+            => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
 }
