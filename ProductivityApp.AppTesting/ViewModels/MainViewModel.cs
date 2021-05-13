@@ -11,7 +11,6 @@ using System.Threading.Tasks;
 using Windows.System;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
-using GalaSoft.MvvmLight.Command;
 using ProductivityApp.AppTesting.Helpers;
 
 namespace ProductivityApp.AppTesting.ViewModels
@@ -20,31 +19,32 @@ namespace ProductivityApp.AppTesting.ViewModels
     {
         // NOTE: This class does not have generic properties, but it will be added in the future to make the code more readable
 
-        public ICommand StartSession, StopSession, SearchFieldEnterCommand, TextChangedCommand, OpenClosePaneCommand;
+        public ICommand StartSession;
+        public ICommand StopSession;
+        public ICommand SearchFieldEnterCommand;
+        public ICommand TextChangedCommand;
+        public ICommand OpenClosePaneCommand;
 
+        // text
         private string _sessionDescription = string.Empty;
         private string _elapsedTime = string.Empty;
-
-        private bool _startSessionBtnEnabled = true;
-
-        private bool _openPaneBtnEnabled;
-        //public MyProp<bool> StartSessionBtnEnabled { get; set; }
-
-        private bool _stopSessionBtnEnabled;
-
         private string _projectSearchField = string.Empty;
 
+        // buttons
+        private bool _startSessionBtnEnabled = true;
+        private bool _openPaneBtnEnabled;
+        
+        private bool _stopSessionBtnEnabled;
 
         private int _returnedProjectId = 0;
         private Session _session = new Session();
-        
-        public ObservableCollection<Project> Projects { get; set; } = new ObservableCollection<Project>();
 
+        // collections 
+        public ObservableCollection<Project> Projects { get; set; } = new ObservableCollection<Project>();
         private ObservableCollection<Project> _queriedProjects = new ObservableCollection<Project>();
         private ObservableCollection<Session> _sessions = new ObservableCollection<Session>();
 
         private readonly CrudOperations _dataAccess = new CrudOperations();
-
 
         public MainViewModel()
         {
@@ -194,6 +194,7 @@ namespace ProductivityApp.AppTesting.ViewModels
                 RaisePropertyChanged();
             }
         }
+
         public bool StopSessionBtnEnabled
         {
             get => _stopSessionBtnEnabled;
