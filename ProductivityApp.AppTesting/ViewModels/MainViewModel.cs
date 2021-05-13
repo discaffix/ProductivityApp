@@ -147,6 +147,8 @@ namespace ProductivityApp.AppTesting.ViewModels
             foreach (var session in sessions)
                 if (!string.IsNullOrWhiteSpace(session.Description))
                     Sessions.Add(session);
+
+            Sessions = new ObservableCollection<Session>(Sessions.OrderByDescending(d => d.StartTime));
         }
 
         internal async Task LoadProjectsASync()
