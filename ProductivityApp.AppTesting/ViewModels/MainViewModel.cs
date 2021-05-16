@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using Windows.System;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
+using GalaSoft.MvvmLight.Command;
 using ProductivityApp.AppTesting.Helpers;
 
 namespace ProductivityApp.AppTesting.ViewModels
@@ -25,6 +26,7 @@ namespace ProductivityApp.AppTesting.ViewModels
         public ICommand TextChangedCommand;
         public ICommand OpenClosePaneCommand;
 
+        public ICommand SelectedItemCommand;
         // text
         private string _sessionDescription = string.Empty;
         private string _elapsedTime = string.Empty;
@@ -40,13 +42,16 @@ namespace ProductivityApp.AppTesting.ViewModels
         private Session _session = new Session();
 
         // collections 
-        public ObservableCollection<Project> Projects { get; set; } = new ObservableCollection<Project>();
+        private ObservableCollection<Project> _projects = new ObservableCollection<Project>();
         private ObservableCollection<Project> _queriedProjects = new ObservableCollection<Project>();
         private ObservableCollection<Session> _sessions = new ObservableCollection<Session>();
 
         private readonly CrudOperations _dataAccess = new CrudOperations();
 
+        private Session _selectedSession;
+
         public MainViewModel()
+
         {
             var timer = new DispatcherTimer();
             
@@ -58,6 +63,7 @@ namespace ProductivityApp.AppTesting.ViewModels
             {
                 OpenPaneBtnEnabled = !OpenPaneBtnEnabled;
             });
+            
 
             TextChangedCommand = new Helpers.RelayCommand<AutoSuggestBoxTextChangedEventArgs>(args =>
             {
@@ -105,13 +111,14 @@ namespace ProductivityApp.AppTesting.ViewModels
                 finally
                 {
                     StartSessionBtnEnabled = true;
-                    _session = new Session();
                     SessionDescription = string.Empty;
 
+                    _session = new Session();
+                    
                     await LoadSessionsAsync();
                 }
             });
-
+            
             // search
             SearchFieldEnterCommand = new Helpers.RelayCommand<KeyRoutedEventArgs>( async searchFieldEnter =>
             {
@@ -240,6 +247,16 @@ namespace ProductivityApp.AppTesting.ViewModels
             }
         }
 
+        public ObservableCollection<Project> Projects
+        {
+            get => _projects;
+            set
+            {
+                if (Equals(_projects, value)) return;
+                _projects = value;
+                RaisePropertyChanged();
+            }
+        }
         public ObservableCollection<Project> QueriedProjects
         {
             get => _queriedProjects;
@@ -247,6 +264,17 @@ namespace ProductivityApp.AppTesting.ViewModels
             {
                 if (Equals(_queriedProjects, value)) return;
                 _queriedProjects = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        public Session SelectedSession
+        {
+            get => _selectedSession;
+            set
+            {
+                if (Equals(_selectedSession, value)) return;
+                _selectedSession = value;
                 RaisePropertyChanged();
             }
         }

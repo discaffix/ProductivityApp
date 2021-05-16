@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 using Windows.UI.Xaml.Data;
 using ProductivityApp.AppTesting.DataAccess;
 using ProductivityApp.Model;
-
 namespace ProductivityApp.AppTesting.Converters
 {
     class ProjectIdToProjectName : IValueConverter

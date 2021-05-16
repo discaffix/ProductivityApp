@@ -22,6 +22,8 @@ namespace ProductivityApp.Model
 
         public int ProjectId { get; set; }
 
+        public Project Project { get; set; }
+
         public ICollection<SessionTag> Tags { get; set; } = new List<SessionTag>();
     }
 }

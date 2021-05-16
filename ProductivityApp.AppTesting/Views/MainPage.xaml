@@ -13,6 +13,9 @@
     </Page.Resources>
 
     <Grid>
+        <Grid.Resources>
+            <converters:ProjectIdToProjectName x:Key="ProjectIdToProjectNameSample"/>
+        </Grid.Resources>
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
@@ -21,8 +24,11 @@
                 <StackPanel Padding="25">
                     <!--Project SearchBox-->
                     <TextBlock Text="Details"/>
-                    <TextBox MinWidth="150" PlaceholderText="What are you currently working on?" Text="{x:Bind ViewModel.SessionDescription, Mode=TwoWay}" Margin="5"/>
-                    <AutoSuggestBox PlaceholderText="Search for a Project"  MinWidth="150" Margin="5" ItemsSource="{x:Bind ViewModel.QueriedProjects, Mode=OneWay}" Text="{x:Bind ViewModel.ProjectSearchField, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                    <TextBox MinWidth="150" PlaceholderText="What are you currently working on?"
+                             Text="{x:Bind ViewModel.SelectedSession.Description, Mode=TwoWay}" Margin="5"/>
+                    <AutoSuggestBox PlaceholderText="Search for a Project"  MinWidth="150" Margin="5"
+                                    ItemsSource="{x:Bind ViewModel.QueriedProjects, Mode=OneWay}"
+                                    Text="{x:Bind ViewModel.SelectedSession.Project.ProjectName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
                         <interactivity:Interaction.Behaviors>
                             <core:EventTriggerBehavior EventName="TextChanged">
                                 <core:InvokeCommandAction Command="{x:Bind ViewModel.TextChangedCommand}" />
@@ -40,12 +46,12 @@
                     <TextBlock Text="Duration" Margin="0,10,0,0"/>
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                         <TextBox MinWidth="60" Margin="0,0,10,0"/>
-                        <TextBox MinWidth="60" Margin="5,0,10,0"/>
-                        <TextBlock MaxWidth="25" Margin="0,0,10,0" Text="->" VerticalAlignment="Center"/>
-                        <TextBox MinWidth="60"/>
+                        <TextBox MinWidth="60" Text="{x:Bind ViewModel.SelectedSession.StartTime, Mode=OneWay}" Margin="5,0,10,0"/>
+                        <TextBlock MaxWidth="25"  Margin="0,0,10,0" Text="->" VerticalAlignment="Center"/>
+                        <TextBox MinWidth="60" Text="{x:Bind ViewModel.SelectedSession.StartTime, Mode=OneWay}"/>
                     </StackPanel>
                     <TextBlock Text="Day" Margin="0,10,0,0"/>
-                    <DatePicker  MonthFormat="{}{month.abbreviated}"/>
+                    <DatePicker Date="{x:Bind ViewModel.SelectedSession.StartTime.Date, Mode=OneWay}"  MonthFormat="{}{month.abbreviated}"/>
 
                     <!--Invisible for now-->
                     <StackPanel Orientation="Horizontal" Visibility="Collapsed">
@@ -118,7 +124,10 @@
                     </StackPanel>
                     
                     <!--List of Sessions-->
-                    <ListView Grid.Row="2" ItemsSource="{x:Bind ViewModel.Sessions, Mode=OneWay}">
+                    <ListView Grid.Row="2" ItemsSource="{x:Bind ViewModel.Sessions, Mode=OneWay}"
+                              SelectedItem="{x:Bind ViewModel.SelectedSession, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                      
+
                         <ListView.ItemContainerStyle>
                             <Style TargetType="ListViewItem">
                                 <Setter Property="HorizontalAlignment" Value="Stretch" />
