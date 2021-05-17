@@ -6,6 +6,7 @@ using System.Windows.Input;
 using System;
 using System.Diagnostics;
 using System.Linq;
+using System.Net.Http;
 using Windows.UI.Xaml;
 using System.Threading.Tasks;
 using Windows.System;
@@ -46,7 +47,7 @@ namespace ProductivityApp.AppTesting.ViewModels
         private ObservableCollection<Project> _queriedProjects = new ObservableCollection<Project>();
         private ObservableCollection<Session> _sessions = new ObservableCollection<Session>();
 
-        private readonly CrudOperations _dataAccess = new CrudOperations();
+        private readonly CrudOperations _dataAccess = new CrudOperations("http://localhost:60098/api", new HttpClient());
 
         private Session _selectedSession;
 
@@ -102,7 +103,7 @@ namespace ProductivityApp.AppTesting.ViewModels
 
                 try
                 {
-                    await _dataAccess.AddEntryToDatabase("Sessions", _session);
+                    await _dataAccess.AddEntryToDatabase(_session);
                 }
                 catch (Exception e)
                 {
@@ -125,14 +126,14 @@ namespace ProductivityApp.AppTesting.ViewModels
                 // When the enter key is pressed in the search field
 
                 if (searchFieldEnter.Key != VirtualKey.Enter) return;
-               if (string.IsNullOrWhiteSpace(ProjectSearchField) || ProjectSearchField.Length < 3) return;
+                if (string.IsNullOrWhiteSpace(ProjectSearchField) || ProjectSearchField.Length < 3) return;
 
                 // create a new project object
                 var project = new Project() { ProjectName = ProjectSearchField };
 
                 // TODO: do something with returnedProjectId
                 project.ProjectName = ProjectSearchField;
-               var success = int.TryParse(await _dataAccess.AddEntryToDatabase("projects", project), out _returnedProjectId);
+               var success = await _dataAccess.AddEntryToDatabase(project);
 
                 // reload project if a value has been returned and parsed
                 if (success)
@@ -142,7 +143,10 @@ namespace ProductivityApp.AppTesting.ViewModels
 
             SaveChangesCommand = new Helpers.RelayCommand<string>(async saveChanges =>
             {
-                await _dataAccess.UpdateDatabaseEntry("sessions", SelectedSession);
+                var success = await _dataAccess.UpdateDatabaseEntry(SelectedSession);
+
+                if (success)
+                    await LoadSessionsAsync();
             });
         }
 
@@ -167,12 +171,10 @@ namespace ProductivityApp.AppTesting.ViewModels
         internal async Task LoadProjectsASync()
         {
             Projects = new ObservableCollection<Project>();
-
             var projects = await _dataAccess.GetDataFromUri<Project>("projects");
             foreach (var project in projects)
                 if (!string.IsNullOrWhiteSpace(project.ProjectName))
                     Projects.Add(project);
-
         }
 
         public string ElapsedTime

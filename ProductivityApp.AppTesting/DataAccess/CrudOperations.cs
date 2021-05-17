@@ -1,8 +1,6 @@
 ﻿using Newtonsoft.Json;
 using System;
-using System.Diagnostics;
 using System.Net.Http;
-using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -10,81 +8,107 @@ namespace ProductivityApp.AppTesting.DataAccess
 {
     public class CrudOperations
     {
-        private readonly HttpClient _httpClient = new HttpClient();
-        private const string BaseUri = "http://localhost:60098/api/";
-        private Uri _uri;
-
-        internal async Task<T[]> GetDataFromUri<T>(string directTablePath, [Optional]string table, [Optional]string value) where T : class
+        public CrudOperations(string baseUri, HttpClient httpClient)
         {
-            _uri = new Uri(BaseUri + directTablePath);
-            HttpResponseMessage result;
+            BaseUri = baseUri;
+            HttpClient = httpClient;
+        }
 
-            if (table != null && value != null)
-            {
-                result = await _httpClient.GetAsync(_uri);
-            }
-            else
-            {
-                result = await _httpClient.GetAsync(_uri);
-            }
+        private HttpClient HttpClient { get; }
+        public string BaseUri { get; set; }
 
+        /// <summary>
+        /// Gets the data from URI.
+        /// </summary>
+        /// <typeparam name="T">lass from the model</typeparam>
+        /// <param name="directTablePath">Name of the table in API.</param>
+        /// <returns>A list of objects returned from the GetRequest.</returns>
+        internal async Task<T[]> GetDataFromUri<T>(string directTablePath) where T : class
+        {
+            var uri = new Uri($"{BaseUri}/{directTablePath}");
+            var result = await HttpClient.GetAsync(uri);
             var json = await result.Content.ReadAsStringAsync();
             return JsonConvert.DeserializeObject<T[]>(json);
         }
 
-        internal async Task<T> GetEntryFromDatabase<T>(string directTablePath, int value) where T : class
+        /// <summary>
+        /// Gets the entry from database.
+        /// </summary>
+        /// <typeparam name="T">A class</typeparam>
+        /// <param name="directTablePath">Name of table in API.</param>
+        /// <param name="id">The ID of the entry.</param>
+        /// <returns>An object corresponding to the </returns>
+        internal async Task<T> GetEntryFromDatabase<T>(string directTablePath, int id) where T : class
         {
-            _uri = new Uri(BaseUri + directTablePath);
-            
-            var result = await _httpClient.GetAsync($"{_uri}/{value}").ConfigureAwait(false);
-            var json = await result.Content.ReadAsStringAsync().ConfigureAwait(false);
-            var data = JsonConvert.DeserializeObject<T>(json);
-            return data;
+            var uri = new Uri(BaseUri + directTablePath);
+            var result = await HttpClient.GetAsync($"{uri}/{id}");
+            var json = await result.Content.ReadAsStringAsync();
+            return JsonConvert.DeserializeObject<T>(json);
         }
 
-        internal async Task<string> AddEntryToDatabase<T>(string directTablePath, T item) where T : class
+        /// <summary>
+        /// Adds the entry to database.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="item">The item.</param>
+        /// <returns></returns>
+        internal async Task<bool> AddEntryToDatabase<T>(T item) where T : class
         {
-            try
-            {
-                _uri = new Uri(BaseUri + directTablePath);
-                var json = JsonConvert.SerializeObject(item);
-                var result = await _httpClient.PostAsync(_uri, new StringContent(json, Encoding.UTF8, "application/json"));
-                return result.Headers.Location.Segments[3];
-                
-                //return result.IsSuccessStatusCode;
-
-            } catch (HttpRequestException e)
-            {
-                Debug.Write(e);
-            }
-
-            return "";
+            var typeName = GetTypeName(item);
+            var uri = new Uri($"{BaseUri}/{typeName}");
+            var json = JsonConvert.SerializeObject(item);
+            var result = await HttpClient.PostAsync(uri, new StringContent(json, Encoding.UTF8, "application/json"));
+            return result.IsSuccessStatusCode;
         }
 
-        internal async Task<bool> DeleteDatabaseEntry<T>(string directTablePath, T item)
+        /// <summary>
+        /// Deletes the database entry.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="item">The item.</param>
+        /// <returns>Boolean based on the result of DeleteAsync</returns>
+        internal async Task<bool> DeleteDatabaseEntry<T>(T item) where T : class
         {
-            _uri = new Uri(BaseUri + directTablePath);
+            var id = GetObjectId(item);
+            var typeName = GetTypeName(item);
+            var uri = new Uri($"{BaseUri}/{typeName}/{id}");
+            var result = await HttpClient.DeleteAsync(uri);
+            return result.IsSuccessStatusCode;
+        }
 
+        /// <summary>
+        /// Updates the database entry.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="item">The item.</param>
+        /// <returns>Boolean based on the result of PutAsync</returns>
+        internal async Task<bool> UpdateDatabaseEntry<T>(T item) where T : class
+        {
+            var id = GetObjectId(item);
+            var typeName = GetTypeName(item);
+            var uri = new Uri($"{BaseUri}/{typeName}/{id}");
+            var json = JsonConvert.SerializeObject(item);
+            var result = await HttpClient.PutAsync(uri, new StringContent(json, Encoding.UTF8, "application/json"));
+            return result.IsSuccessStatusCode;
+        }
+
+        /// <summary>
+        /// Gets the object identifier.
+        /// </summary>
+        private static int GetObjectId<T>(T item)
+        {
             var type = item.GetType();
-            var controller = type.Name;
             var properties = type.GetProperties();
             var idValue = properties[0].GetValue(item, null);
-
-            var newPath = $"{controller.ToLower()}s/{idValue}";
-            var result = await _httpClient.DeleteAsync(new Uri(_uri, newPath));
-
-            return result.IsSuccessStatusCode;
+            return (int) idValue;
         }
 
-        internal async Task<bool> UpdateDatabaseEntry<T>(string directTablePath, T item)
+        /// <summary>
+        /// Gets the name of the type.
+        /// </summary>
+        private static string GetTypeName<T>(T item)
         {
-            _uri = new Uri(BaseUri + directTablePath);
-
-            var json = JsonConvert.SerializeObject(item);
-            var result = await _httpClient.PutAsync(_uri, new StringContent(json, Encoding.UTF8, "application/json"));
-
-            return result.IsSuccessStatusCode;
+            return item.GetType().Name + "s";
         }
-
     }
 }

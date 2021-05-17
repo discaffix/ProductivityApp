@@ -13,9 +13,6 @@
     </Page.Resources>
 
     <Grid>
-        <Grid.Resources>
-            <converters:ProjectIdToProjectName x:Key="ProjectIdToProjectNameSample"/>
-        </Grid.Resources>
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
@@ -138,9 +135,6 @@
                         <ListView.ItemTemplate>
                             <DataTemplate>
                                 <Grid Background="#301934" BorderBrush="#190805" Padding="5" BorderThickness="3" Margin="10">
-                                    <Grid.Resources>
-                                        <converters:ProjectIdToProjectName x:Key="ProjectIdToProjectName"/>
-                                    </Grid.Resources>
                                     <Grid.RowDefinitions>
                                         <RowDefinition Height="*" />
                                         <RowDefinition Height="*" />
@@ -153,7 +147,7 @@
                                     <TextBlock Text="{Binding StartTime}" Padding="5" />
                                     <TextBlock Grid.Row="1" Grid.Column="0" Text="{Binding Description}" Padding="5"  />
                                     <TextBlock Grid.Row="1" Grid.Column="1" Text="1:15:21" TextAlignment="Right" Padding="5"/>
-                                    <TextBlock Grid.Row="2" Grid.Column="0" Text="{Binding  Converter={StaticResource ProjectIdToProjectName}}" Padding="5" />
+                                    <TextBlock Grid.Row="2" Grid.Column="0" Text="{Binding Project.ProjectName}" Padding="5" />
                                 </Grid>
                             </DataTemplate>
                         </ListView.ItemTemplate>

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Net.Http;
 using System.Windows.Input;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
@@ -17,7 +18,7 @@ namespace ProductivityApp.AppTesting.ViewModels
         private string _email;
         private string _password;
 
-        private readonly CrudOperations _dataAccess = new CrudOperations();
+        private readonly CrudOperations _dataAccess = new CrudOperations("http://localhost:60098/api", new HttpClient());
         private List<Session> Sessions = new List<Session>();
 
         /// <summary>
