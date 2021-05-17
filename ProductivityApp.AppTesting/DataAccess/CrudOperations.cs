@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ProductivityApp.AppTesting.DataAccess
 {
-    public class CrudOperations
+    public class CrudOperations 
     {
         public CrudOperations(string baseUri, HttpClient httpClient)
         {
@@ -38,7 +38,7 @@ namespace ProductivityApp.AppTesting.DataAccess
         /// <param name="directTablePath">Name of table in API.</param>
         /// <param name="id">The ID of the entry.</param>
         /// <returns>An object corresponding to the </returns>
-        internal async Task<T> GetEntryFromDatabase<T>(string directTablePath, int id) where T : class
+        internal async Task<T> GetEntryFromDatabase<T>(string directTablePath, int id)
         {
             var uri = new Uri(BaseUri + directTablePath);
             var result = await HttpClient.GetAsync($"{uri}/{id}");

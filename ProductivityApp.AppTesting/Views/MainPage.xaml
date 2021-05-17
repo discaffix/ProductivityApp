@@ -53,12 +53,15 @@
                     <!--Invisible for now-->
                     <StackPanel Orientation="Horizontal" Visibility="Collapsed">
                         <!--Start Session-->
-                        <Button Content="Start Session" Margin="0,5,0,0" IsEnabled="{x:Bind ViewModel.StartSessionBtnEnabled, Mode=OneWay}" Command="{x:Bind ViewModel.StartSession}" />
+                        <Button Content="Start Session" Margin="0,5,0,0" IsEnabled="{x:Bind ViewModel.StartSessionBtnEnabled, Mode=OneWay}" Command="{x:Bind ViewModel.StartSessionCommand}" />
                         <!--Stop Session-->
-                        <Button Content="Stop Session" Margin="15,5,0,0" IsEnabled="{x:Bind ViewModel.StopSessionBtnEnabled, Mode=OneWay}" Command="{x:Bind ViewModel.StopSession}" />
+                        <Button Content="Stop Session" Margin="15,5,0,0" IsEnabled="{x:Bind ViewModel.StopSessionBtnEnabled, Mode=OneWay}" Command="{x:Bind ViewModel.StopSessionCommand}" />
                     </StackPanel>
 
-                    <Button Content="Save Content" Command="{x:Bind ViewModel.SaveChangesCommand}" Margin="0,15" IsEnabled="True" />
+                    <StackPanel Orientation="Horizontal">
+                        <Button Content="Save Content" Command="{x:Bind ViewModel.SaveChangesCommand}" Margin="0,15" IsEnabled="True" />
+                        <Button Content="Delete Entry" Command="{x:Bind ViewModel.DeleteEntryCommand}" Margin="0,15" IsEnabled="True"/>
+                    </StackPanel>
                 </StackPanel>
             </SplitView.Pane>
             <Grid Background="#1d0f1f">
@@ -92,8 +95,8 @@
 
                     <!--Temporary Buttons-->
                     <StackPanel Grid.Row="1" Orientation="Horizontal">
-                        <Button Content="Start Session" Margin="0,5,0,0" IsEnabled="{x:Bind ViewModel.StartSessionBtnEnabled, Mode=OneWay}" Command="{x:Bind ViewModel.StartSession}" />
-                        <Button Content="Stop Session" Margin="15,5,0,0" IsEnabled="{x:Bind ViewModel.StopSessionBtnEnabled, Mode=OneWay}" Command="{x:Bind ViewModel.StopSession}" />
+                        <Button Content="Start Session" Margin="0,5,0,0" IsEnabled="{x:Bind ViewModel.StartSessionBtnEnabled, Mode=OneWay}" Command="{x:Bind ViewModel.StartSessionCommand}" />
+                        <Button Content="Stop Session" Margin="15,5,0,0" IsEnabled="{x:Bind ViewModel.StopSessionBtnEnabled, Mode=OneWay}" Command="{x:Bind ViewModel.StopSessionCommand}" />
                         <Button Margin="15,5,0,0" Content="Selected Project">
                             <Button.Flyout>
                                 <Flyout Placement="Bottom">

@@ -9,6 +9,7 @@ using System.Linq;
 using System.Net.Http;
 using Windows.UI.Xaml;
 using System.Threading.Tasks;
+using Windows.ApplicationModel.Contacts;
 using Windows.System;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
@@ -21,13 +22,14 @@ namespace ProductivityApp.AppTesting.ViewModels
     {
         // NOTE: This class does not have generic properties, but it will be added in the future to make the code more readable
 
-        public ICommand StartSession;
-        public ICommand StopSession;
+        public ICommand StartSessionCommand;
+        public ICommand StopSessionCommand;
         public ICommand SearchFieldEnterCommand;
         public ICommand TextChangedCommand;
         public ICommand OpenClosePaneCommand;
-
         public ICommand SaveChangesCommand;
+
+        public ICommand DeleteEntryCommand;
         // text
         private string _sessionDescription = string.Empty;
         private string _elapsedTime = string.Empty;
@@ -38,18 +40,18 @@ namespace ProductivityApp.AppTesting.ViewModels
         private bool _openPaneBtnEnabled;
         
         private bool _stopSessionBtnEnabled;
-
-        private int _returnedProjectId = 0;
+        
         private Session _session = new Session();
 
         // collections 
         private ObservableCollection<Project> _projects = new ObservableCollection<Project>();
         private ObservableCollection<Project> _queriedProjects = new ObservableCollection<Project>();
         private ObservableCollection<Session> _sessions = new ObservableCollection<Session>();
+        private Session _selectedSession;
 
         private readonly CrudOperations _dataAccess = new CrudOperations("http://localhost:60098/api", new HttpClient());
 
-        private Session _selectedSession;
+        
 
         public MainViewModel()
 
@@ -60,94 +62,109 @@ namespace ProductivityApp.AppTesting.ViewModels
             timer.Interval = new TimeSpan(0, 0, 1);
             timer.Start();
 
-            OpenClosePaneCommand = new Helpers.RelayCommand<string>(openClose =>
+            OpenClosePaneCommand = new RelayCommand(ChangePanelState, true);
+            TextChangedCommand = new RelayCommand(TextChangedSuggestBox, true);
+            StartSessionCommand = new RelayCommand(StartSession, true);
+            StopSessionCommand = new RelayCommand(StopSession, true);
+            SearchFieldEnterCommand = new Helpers.RelayCommand<KeyRoutedEventArgs>(QuerySearchFieldProjectNames);
+            SaveChangesCommand = new RelayCommand(SaveChangesToDatabaseEntry, true);
+            DeleteEntryCommand = new RelayCommand(DeleteDatabaseEntry, true);
+        }
+
+        public async void DeleteDatabaseEntry()
+        {
+            await _dataAccess.DeleteDatabaseEntry(SelectedSession);
+            SelectedSession = null;
+        }
+
+        public async void QuerySearchFieldProjectNames(KeyRoutedEventArgs searchFieldEnter)
+        {
+            // When the enter key is pressed in the search field
+
+            if (searchFieldEnter.Key != VirtualKey.Enter) return;
+            if (string.IsNullOrWhiteSpace(ProjectSearchField) || ProjectSearchField.Length < 3) return;
+
+            // create a new project object
+            var project = new Project() { ProjectName = ProjectSearchField };
+
+            // TODO: do something with returnedProjectId
+            project.ProjectName = ProjectSearchField;
+            var success = await _dataAccess.AddEntryToDatabase(project);
+
+            // reload project if a value has been returned and parsed
+            if (success)
+                await LoadProjectsASync();
+        }
+
+        public async void SaveChangesToDatabaseEntry()
+        {
+            var success = await _dataAccess.UpdateDatabaseEntry(SelectedSession);
+
+            if (success)
+                await LoadSessionsAsync();
+        }
+
+        public void StartSession()
+        {
+            _session.Description = _sessionDescription;
+            _session.StartTime = DateTime.Now;
+
+            StartSessionBtnEnabled = false;
+            StopSessionBtnEnabled = true;
+        }
+
+        public async void StopSession()
+        {
+            StopSessionBtnEnabled = false;
+            _session.EndTime = DateTime.Now;
+            _session.UserId = 1;
+            _session.ProjectId = 1;
+
+            try
             {
-                OpenPaneBtnEnabled = !OpenPaneBtnEnabled;
-            });
-
-
-            TextChangedCommand = new Helpers.RelayCommand<AutoSuggestBoxTextChangedEventArgs>(args =>
+                await _dataAccess.AddEntryToDatabase(_session);
+            }
+            catch (Exception e)
             {
-                var selectedItems = new ObservableCollection<Project>();
-                var text = ProjectSearchField.ToLower().Split(" ");
-
-                foreach (var project in Projects)
-                {
-                    var foundProjects = text.All((key) => project.ProjectName.ToLower().Contains(key));
-
-                    if (foundProjects)
-                        selectedItems.Add(project);
-                }
-
-                if (selectedItems.Count == 0)
-                    selectedItems.Add(new Project() { ProjectName = "No Project Found" });
-
-                QueriedProjects = selectedItems;
-            });
-
-            StartSession = new Helpers.RelayCommand<string>(register =>
+                Debug.Write(e);
+            }
+            finally
             {
-                _session.Description = _sessionDescription;
-                _session.StartTime = DateTime.Now;
+                StartSessionBtnEnabled = true;
+                SessionDescription = string.Empty;
 
-                StartSessionBtnEnabled = false;
-                StopSessionBtnEnabled = true;
-            });
+                _session = new Session();
 
-            StopSession = new Helpers.RelayCommand<string>(async login =>
+                await LoadSessionsAsync();
+            }
+        }
+
+
+        /// <summary>
+        /// Texts the changed suggest box.
+        /// </summary>
+        public void TextChangedSuggestBox()
+        {
+            var selectedItems = new ObservableCollection<Project>();
+            var text = ProjectSearchField.ToLower().Split(" ");
+
+            foreach (var project in Projects)
             {
-                StopSessionBtnEnabled = false;
-                _session.EndTime = DateTime.Now;
-                _session.UserId = 1;
-                _session.ProjectId = 1;
+                var foundProjects = text.All((key) => project.ProjectName.ToLower().Contains(key));
 
-                try
-                {
-                    await _dataAccess.AddEntryToDatabase(_session);
-                }
-                catch (Exception e)
-                {
-                    Debug.Write(e);
-                }
-                finally
-                {
-                    StartSessionBtnEnabled = true;
-                    SessionDescription = string.Empty;
+                if (foundProjects)
+                    selectedItems.Add(project);
+            }
 
-                    _session = new Session();
+            if (selectedItems.Count == 0)
+                selectedItems.Add(new Project() { ProjectName = "No Project Found" });
 
-                    await LoadSessionsAsync();
-                }
-            });
-
-            // search
-            SearchFieldEnterCommand = new Helpers.RelayCommand<KeyRoutedEventArgs>(async searchFieldEnter =>
-           {
-                // When the enter key is pressed in the search field
-
-                if (searchFieldEnter.Key != VirtualKey.Enter) return;
-                if (string.IsNullOrWhiteSpace(ProjectSearchField) || ProjectSearchField.Length < 3) return;
-
-                // create a new project object
-                var project = new Project() { ProjectName = ProjectSearchField };
-
-                // TODO: do something with returnedProjectId
-                project.ProjectName = ProjectSearchField;
-               var success = await _dataAccess.AddEntryToDatabase(project);
-
-                // reload project if a value has been returned and parsed
-                if (success)
-                   await LoadProjectsASync();
-           });
-
-
-            SaveChangesCommand = new Helpers.RelayCommand<string>(async saveChanges =>
-            {
-                var success = await _dataAccess.UpdateDatabaseEntry(SelectedSession);
-
-                if (success)
-                    await LoadSessionsAsync();
-            });
+            QueriedProjects = selectedItems;
+        }
+        
+        public void ChangePanelState()
+        {
+            OpenPaneBtnEnabled = !OpenPaneBtnEnabled;
         }
 
         private void Timer_Tick(object sender, object e)
