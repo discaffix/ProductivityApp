@@ -76,5 +76,15 @@ namespace ProductivityApp.AppTesting.DataAccess
             return result.IsSuccessStatusCode;
         }
 
+        internal async Task<bool> UpdateDatabaseEntry<T>(string directTablePath, T item)
+        {
+            _uri = new Uri(BaseUri + directTablePath);
+
+            var json = JsonConvert.SerializeObject(item);
+            var result = await _httpClient.PutAsync(_uri, new StringContent(json, Encoding.UTF8, "application/json"));
+
+            return result.IsSuccessStatusCode;
+        }
+
     }
 }

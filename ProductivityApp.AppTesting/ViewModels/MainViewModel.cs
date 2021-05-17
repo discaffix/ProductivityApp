@@ -26,7 +26,7 @@ namespace ProductivityApp.AppTesting.ViewModels
         public ICommand TextChangedCommand;
         public ICommand OpenClosePaneCommand;
 
-        public ICommand SelectedItemCommand;
+        public ICommand SaveChangesCommand;
         // text
         private string _sessionDescription = string.Empty;
         private string _elapsedTime = string.Empty;
@@ -54,7 +54,7 @@ namespace ProductivityApp.AppTesting.ViewModels
 
         {
             var timer = new DispatcherTimer();
-            
+
             timer.Tick += Timer_Tick;
             timer.Interval = new TimeSpan(0, 0, 1);
             timer.Start();
@@ -63,7 +63,7 @@ namespace ProductivityApp.AppTesting.ViewModels
             {
                 OpenPaneBtnEnabled = !OpenPaneBtnEnabled;
             });
-            
+
 
             TextChangedCommand = new Helpers.RelayCommand<AutoSuggestBoxTextChangedEventArgs>(args =>
             {
@@ -114,29 +114,35 @@ namespace ProductivityApp.AppTesting.ViewModels
                     SessionDescription = string.Empty;
 
                     _session = new Session();
-                    
+
                     await LoadSessionsAsync();
                 }
             });
-            
+
             // search
-            SearchFieldEnterCommand = new Helpers.RelayCommand<KeyRoutedEventArgs>( async searchFieldEnter =>
-            {
+            SearchFieldEnterCommand = new Helpers.RelayCommand<KeyRoutedEventArgs>(async searchFieldEnter =>
+           {
                 // When the enter key is pressed in the search field
 
                 if (searchFieldEnter.Key != VirtualKey.Enter) return;
-                if (string.IsNullOrWhiteSpace(ProjectSearchField) || ProjectSearchField.Length < 3) return;
+               if (string.IsNullOrWhiteSpace(ProjectSearchField) || ProjectSearchField.Length < 3) return;
 
                 // create a new project object
-                var project = new Project() {ProjectName = ProjectSearchField};
+                var project = new Project() { ProjectName = ProjectSearchField };
 
                 // TODO: do something with returnedProjectId
                 project.ProjectName = ProjectSearchField;
-                var success = int.TryParse(await _dataAccess.AddEntryToDatabase("projects", project), out _returnedProjectId);
+               var success = int.TryParse(await _dataAccess.AddEntryToDatabase("projects", project), out _returnedProjectId);
 
                 // reload project if a value has been returned and parsed
                 if (success)
-                    await LoadProjectsASync();
+                   await LoadProjectsASync();
+           });
+
+
+            SaveChangesCommand = new Helpers.RelayCommand<bool>(async _ =>
+            {
+                await _dataAccess.UpdateDatabaseEntry("sessions", SelectedSession);
             });
         }
 

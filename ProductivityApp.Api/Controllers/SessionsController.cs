@@ -25,9 +25,25 @@ namespace ProductivityApp.Api.Controllers
     [HttpGet]
     public async Task<ActionResult<IEnumerable<Session>>> GetSessions()
     {
+        // get the session, with ProjectId and ProjectName from the Project
         var sessions = await _context.Sessions
-            .Include(session => session.Project)
+            .Include(s => s.Project)
+            .Select(s => new Session()
+            {
+                SessionId = s.SessionId,
+                Description = s.Description,
+                StartTime = s.StartTime,
+                EndTime = s.EndTime,
+                UserId = s.UserId,
+                ProjectId = s.ProjectId,
+                Project = new Project()
+                {
+                    ProjectId = s.Project.ProjectId,
+                    ProjectName = s.Project.ProjectName
+                }
+            })
             .ToListAsync();
+
         return sessions;
     }
 

@@ -30,7 +30,7 @@ namespace ProductivityApp.Api.Controllers
            .ToListAsync();
 
 
-            return projects;
+            return await _context.Projects.ToListAsync();
         }
 
         // GET: api/Projects/5
