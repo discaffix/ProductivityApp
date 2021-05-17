@@ -61,7 +61,7 @@
                         <Button Content="Stop Session" Margin="15,5,0,0" IsEnabled="{x:Bind ViewModel.StopSessionBtnEnabled, Mode=OneWay}" Command="{x:Bind ViewModel.StopSession}" />
                     </StackPanel>
 
-                    <Button Content="Save Content" Margin="0,15" IsEnabled="True" />
+                    <Button Content="Save Content" Command="{x:Bind ViewModel.SaveChangesCommand}" Margin="0,15" IsEnabled="True" />
                 </StackPanel>
             </SplitView.Pane>
             <Grid Background="#1d0f1f">

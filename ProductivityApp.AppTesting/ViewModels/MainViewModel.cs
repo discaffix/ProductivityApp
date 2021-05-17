@@ -140,7 +140,7 @@ namespace ProductivityApp.AppTesting.ViewModels
            });
 
 
-            SaveChangesCommand = new Helpers.RelayCommand<bool>(async _ =>
+            SaveChangesCommand = new Helpers.RelayCommand<string>(async saveChanges =>
             {
                 await _dataAccess.UpdateDatabaseEntry("sessions", SelectedSession);
             });
