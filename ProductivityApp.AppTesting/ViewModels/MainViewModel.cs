@@ -51,8 +51,6 @@ namespace ProductivityApp.AppTesting.ViewModels
 
         private readonly CrudOperations _dataAccess = new CrudOperations("http://localhost:60098/api", new HttpClient());
 
-        
-
         public MainViewModel()
 
         {
