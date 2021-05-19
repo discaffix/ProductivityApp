@@ -1,0 +1,365 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<Page
+    x:Class="ProductivityApp.App.Views.MainPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:converters="using:ProductivityApp.App.Converters"
+    xmlns:core="using:Microsoft.Xaml.Interactions.Core"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:models="using:ProductivityApp.Model"
+    Style="{StaticResource PageStyle}"
+    mc:Ignorable="d">
+
+    <interactivity:Interaction.Behaviors>
+        <core:EventTriggerBehavior EventName="Loaded">
+            <core:EventTriggerBehavior.Actions>
+                <core:InvokeCommandAction Command="{x:Bind ViewModel.PageLoadedCommand}" />
+            </core:EventTriggerBehavior.Actions>
+        </core:EventTriggerBehavior>
+    </interactivity:Interaction.Behaviors>
+
+    <Page.Resources>
+        <converters:AutoSuggestTextChangedParameterConverter x:Key="ArgsConverter" />
+        <converters:DatesToTimeSpanConverter x:Key="DatesToTimeSpanConverter" />
+        <converters:DateToTimeOfDay x:Key="DateToTimeOfDayConverter" />
+
+        <CollectionViewSource
+            x:Name="CollectionViewSource"
+            IsSourceGrouped="True"
+            Source="{x:Bind ViewModel.GroupedSessions, Mode=OneWay}" />
+    </Page.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <SplitView
+            DisplayMode="Inline"
+            IsPaneOpen="{x:Bind ViewModel.OpenPaneBtnEnabled, Mode=OneWay}"
+            PaneBackground="{StaticResource ItemAndPaneBackgroundColor}"
+            PanePlacement="Right">
+
+            <!--  Pane where you can edit the currently selected  -->
+            <SplitView.Pane>
+                <StackPanel Padding="{StaticResource SmallLeftTopRightBottomMargin}">
+
+                    <TextBlock Text="Details" />
+
+                    <TextBox
+                        MinWidth="150"
+                        Margin="{StaticResource SmallTopMargin}"
+                        PlaceholderText="What are you currently working on?"
+                        Style="{StaticResource ButtonStyle}"
+                        Text="{x:Bind ViewModel.SelectedSession.Description, Mode=TwoWay}" />
+
+                    <!--  Select Project  -->
+                    <AutoSuggestBox
+                        MinWidth="150"
+                        Margin="{StaticResource SmallTopMargin}"
+                        ItemsSource="{x:Bind ViewModel.QueriedProjects, Mode=OneWay}"
+                        PlaceholderText="Search for a Project"
+                        Style="{StaticResource ButtonStyle}"
+                        Text="{x:Bind ViewModel.SelectedSession.Project.ProjectName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                        TextBoxStyle="{StaticResource AutoSuggestBoxStyle}">
+
+                        <interactivity:Interaction.Behaviors>
+                            <core:EventTriggerBehavior EventName="TextChanged">
+                                <core:InvokeCommandAction Command="{x:Bind ViewModel.TextChangedCommand}" />
+                            </core:EventTriggerBehavior>
+                        </interactivity:Interaction.Behaviors>
+                        <AutoSuggestBox.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding ProjectName}" />
+                            </DataTemplate>
+                        </AutoSuggestBox.ItemTemplate>
+
+                    </AutoSuggestBox>
+                    <TextBlock Margin="0,10,0,0" Text="Tags" />
+                    <TextBox
+                        MinWidth="150"
+                        Margin="5"
+                        PlaceholderText="Select a Tag"
+                        Style="{StaticResource ButtonStyle}"
+                        Text="{x:Bind ViewModel.SessionDescription, Mode=TwoWay}" />
+
+                    <TextBlock Margin="0,10,0,0" Text="Duration" />
+
+                    <Grid>
+
+                        <!--<Grid.Resources>
+                            <converters:DatesToTimeSpanConverter x:Key="DatesToTimeSpanConverter" />
+                        </Grid.Resources>-->
+
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <TextBox
+                            Grid.Column="0"
+                            MinWidth="60"
+                            PlaceholderText="Time Span"
+                            Style="{StaticResource ButtonStyle}"
+                            Text="{x:Bind ViewModel.SelectedSession, Converter={StaticResource DatesToTimeSpanConverter}, Mode=OneWay}" />
+                        <TextBox
+                            Grid.Column="1"
+                            MinWidth="60"
+                            PlaceholderText="Start Time"
+                            Style="{StaticResource ButtonStyle}"
+                            Text="{x:Bind ViewModel.SelectedSession.StartTime, Converter={StaticResource DateToTimeOfDayConverter}, Mode=OneWay}" />
+                        <TextBox
+                            Grid.Column="2"
+                            PlaceholderText="End Time"
+                            Style="{StaticResource ButtonStyle}"
+                            Text="{x:Bind ViewModel.SelectedSession.StartTime, Converter={StaticResource DateToTimeOfDayConverter}, Mode=OneWay}" />
+                    </Grid>
+
+
+                    <TextBlock Margin="0,10,0,0" Text="Day" />
+                    <DatePicker
+                        Date="{x:Bind ViewModel.SelectedSession.StartTime.Date, Mode=OneWay}"
+                        MonthFormat="{}{month.abbreviated}"
+                        Style="{StaticResource ButtonStyle}" />
+
+                    <!--  Invisible for now  -->
+                    <StackPanel Orientation="Horizontal" Visibility="Collapsed">
+                        <!--  Start Session  -->
+                        <Button
+                            Margin="0,5,0,0"
+                            Command="{x:Bind ViewModel.StartSessionCommand}"
+                            Content="Start Session"
+                            IsEnabled="{x:Bind ViewModel.StartSessionBtnEnabled, Mode=OneWay}"
+                            Style="{StaticResource ButtonStyle}" />
+                        <!--  Stop Session  -->
+                        <Button
+                            Margin="15,5,0,0"
+                            Command="{x:Bind ViewModel.StopSessionCommand}"
+                            Content="Stop Session"
+                            IsEnabled="{x:Bind ViewModel.StopSessionBtnEnabled, Mode=OneWay}"
+                            Style="{StaticResource ButtonStyle}" />
+                    </StackPanel>
+
+                    <StackPanel Margin="0,15,0,0" Orientation="Horizontal">
+                        <Button
+                            Margin="{StaticResource SmallRightMargin}"
+                            Command="{x:Bind ViewModel.SaveChangesCommand}"
+                            Content="Save Content"
+                            IsEnabled="True"
+                            Style="{StaticResource ButtonStyle}" />
+                        <Button
+                            Command="{x:Bind ViewModel.DeleteEntryCommand}"
+                            Content="Delete Entry"
+                            IsEnabled="True"
+                            Style="{StaticResource ButtonStyle}" />
+                    </StackPanel>
+                </StackPanel>
+            </SplitView.Pane>
+            <Grid Background="{StaticResource MainBackgroundColor}">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="auto" />
+
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="40" />
+                        </Grid.ColumnDefinitions>
+
+                        <TextBox
+                            PlaceholderText="What are you currently working on?"
+                            Style="{StaticResource ButtonStyle}"
+                            Text="{x:Bind ViewModel.SessionDescription, Mode=TwoWay}" />
+                        <Button
+                            Grid.Column="0"
+                            HorizontalAlignment="Stretch"
+                            HorizontalContentAlignment="left"
+                            Background="{StaticResource ButtonBackgroundColor}"
+                            Content="+ Click here to add details."
+                            Foreground="{StaticResource TextColor}"
+                            IsEnabled="False"
+                            Visibility="Collapsed" />
+                        <Button
+                            Grid.Column="1"
+                            Width="40"
+                            Height="40"
+                            AutomationProperties.Name="Pie"
+                            Command="{x:Bind ViewModel.OpenClosePaneCommand}"
+                            Style="{StaticResource ButtonStyle}">
+                            <SymbolIcon Symbol="Play" />
+
+                        </Button>
+                    </Grid>
+
+                    <!--  Temporary Buttons  -->
+                    <StackPanel Grid.Row="1" Orientation="Horizontal">
+                        <Button
+                            Margin="0,5,0,0"
+                            Command="{x:Bind ViewModel.StartSessionCommand}"
+                            Content="Start Session"
+                            IsEnabled="{x:Bind ViewModel.StartSessionBtnEnabled, Mode=OneWay}"
+                            Style="{StaticResource ButtonStyle}" />
+                        <Button
+                            Margin="15,5,0,0"
+                            Command="{x:Bind ViewModel.StopSessionCommand}"
+                            Content="Stop Session"
+                            IsEnabled="{x:Bind ViewModel.StopSessionBtnEnabled, Mode=OneWay}"
+                            Style="{StaticResource ButtonStyle}" />
+                        <Button
+                            Margin="15,5,0,0"
+                            Content="Selected Project"
+                            Style="{StaticResource ButtonStyle}">
+                            <Button.Flyout>
+                                <Flyout Placement="Bottom">
+                                    <StackPanel>
+                                        <AutoSuggestBox
+                                            MinWidth="355"
+                                            ItemsSource="{x:Bind ViewModel.QueriedProjects, Mode=OneWay}"
+                                            Text="{x:Bind ViewModel.ProjectSearchField, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                                            <interactivity:Interaction.Behaviors>
+                                                <core:EventTriggerBehavior EventName="TextChanged">
+                                                    <core:InvokeCommandAction Command="{x:Bind ViewModel.TextChangedCommand}" />
+                                                </core:EventTriggerBehavior>
+                                            </interactivity:Interaction.Behaviors>
+                                            <AutoSuggestBox.ItemTemplate>
+                                                <DataTemplate>
+                                                    <TextBlock Text="{Binding ProjectName}" />
+                                                </DataTemplate>
+                                            </AutoSuggestBox.ItemTemplate>
+                                        </AutoSuggestBox>
+                                    </StackPanel>
+                                </Flyout>
+                            </Button.Flyout>
+                        </Button>
+                        <TextBlock
+                            Margin="25,0,0,0"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            Text="{x:Bind ViewModel.ElapsedTime, Mode=OneWay}" />
+                    </StackPanel>
+
+                    <!--  List of Sessions  -->
+                    <ListView
+                        Grid.Row="2"
+                        ItemsSource="{Binding Source={StaticResource CollectionViewSource}}"
+                        SelectedItem="{x:Bind ViewModel.SelectedSession, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+
+                        <ListView.ItemContainerStyle>
+                            <Style TargetType="ListViewItem">
+                                <Setter Property="HorizontalAlignment" Value="Stretch" />
+                                <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                                <Setter Property="Margin" Value="10" />
+                            </Style>
+                        </ListView.ItemContainerStyle>
+
+                        <ListView.ItemTemplate>
+                            <DataTemplate x:DataType="models:Session">
+                                <Grid
+                                    Margin="10"
+                                    Padding="5"
+                                    Background="{StaticResource ItemAndPaneBackgroundColor}">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="*" />
+                                        <RowDefinition Height="*" />
+                                        <RowDefinition Height="*" />
+                                    </Grid.RowDefinitions>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Padding="5" Text="{Binding StartTime}" />
+                                    <TextBlock
+                                        Grid.Row="1"
+                                        Grid.Column="0"
+                                        Padding="5"
+                                        Foreground="{StaticResource TextColor}"
+                                        Text="{Binding Description}" />
+                                    <TextBlock
+                                        Grid.Row="1"
+                                        Grid.Column="1"
+                                        Padding="5"
+                                        Foreground="{StaticResource TextColor}"
+                                        Text="{Binding Converter={StaticResource DatesToTimeSpanConverter}}"
+                                        TextAlignment="Right" />
+                                    <TextBlock
+                                        Grid.Row="2"
+                                        Grid.Column="0"
+                                        Padding="5"
+                                        Foreground="{StaticResource TextColor}"
+                                        Text="{Binding Project.ProjectName}" />
+                                </Grid>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+
+                        <ListView.GroupStyle>
+                            <GroupStyle>
+                                <GroupStyle.HeaderTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding Key}" />
+                                    </DataTemplate>
+                                </GroupStyle.HeaderTemplate>
+                            </GroupStyle>
+                        </ListView.GroupStyle>
+
+                    </ListView>
+
+                    <!--<ListView
+                        Grid.Row="2"
+                        ItemsSource="{x:Bind ViewModel.Sessions, Mode=OneWay}"
+                        SelectedItem="{x:Bind ViewModel.SelectedSession, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+
+                        <ListView.ItemContainerStyle>
+                            <Style TargetType="ListViewItem">
+                                <Setter Property="HorizontalAlignment" Value="Stretch" />
+                                <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                                <Setter Property="Margin" Value="10" />
+                            </Style>
+                        </ListView.ItemContainerStyle>
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <Grid
+                                    Margin="10"
+                                    Padding="5"
+                                    Background="{StaticResource ItemAndPaneBackgroundColor}">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="*" />
+                                        <RowDefinition Height="*" />
+                                        <RowDefinition Height="*" />
+                                    </Grid.RowDefinitions>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Padding="5" Text="{Binding StartTime}" />
+                                    <TextBlock
+                                        Grid.Row="1"
+                                        Grid.Column="0"
+                                        Padding="5"
+                                        Foreground="{StaticResource TextColor}"
+                                        Text="{Binding Description}" />
+                                    <TextBlock
+                                        Grid.Row="1"
+                                        Grid.Column="1"
+                                        Padding="5"
+                                        Foreground="{StaticResource TextColor}"
+                                        Text="{Binding Converter={StaticResource DatesToTimeSpanConverter}}"
+                                        TextAlignment="Right" />
+                                    <TextBlock
+                                        Grid.Row="2"
+                                        Grid.Column="0"
+                                        Padding="5"
+                                        Foreground="{StaticResource TextColor}"
+                                        Text="{Binding Project.ProjectName}" />
+                                </Grid>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>-->
+                </Grid>
+            </Grid>
+        </SplitView>
+    </Grid>
+</Page>
