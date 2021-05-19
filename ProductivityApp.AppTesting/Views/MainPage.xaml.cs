@@ -14,6 +14,7 @@ namespace ProductivityApp.AppTesting.Views
 
         private async void Page_LoadedAsync(object sender, Windows.UI.Xaml.RoutedEventArgs e)
         {
+            DataContext = ViewModel;
             await ViewModel.LoadSessionsAsync();
             await ViewModel.LoadProjectsASync();
         }

@@ -13,6 +13,7 @@
     mc:Ignorable="d">
     <Page.Resources>
         <converters:AutoSuggestTextChangedParameterConverter x:Key="ArgsConverter" />
+        <converters:DatesToTimeSpanConverter x:Key="DatesToTimeSpanConverter" />
     </Page.Resources>
 
     <Grid>
@@ -47,6 +48,7 @@
                         Style="{StaticResource ButtonStyle}"
                         Text="{x:Bind ViewModel.SelectedSession.Project.ProjectName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                         TextBoxStyle="{StaticResource AutoSuggestBoxStyle}">
+
                         <interactivity:Interaction.Behaviors>
                             <core:EventTriggerBehavior EventName="TextChanged">
                                 <core:InvokeCommandAction Command="{x:Bind ViewModel.TextChangedCommand}" />
@@ -70,6 +72,11 @@
                     <TextBlock Margin="0,10,0,0" Text="Duration" />
 
                     <Grid>
+
+                        <!--<Grid.Resources>
+                            <converters:DatesToTimeSpanConverter x:Key="DatesToTimeSpanConverter" />
+                        </Grid.Resources>-->
+
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*" />
                             <ColumnDefinition Width="*" />
@@ -79,7 +86,8 @@
                             Grid.Column="0"
                             MinWidth="60"
                             PlaceholderText="Time Span"
-                            Style="{StaticResource ButtonStyle}" />
+                            Style="{StaticResource ButtonStyle}"
+                            Text="{x:Bind ViewModel.SelectedSession, Converter={StaticResource DatesToTimeSpanConverter}, Mode=OneWay}" />
                         <TextBox
                             Grid.Column="1"
                             MinWidth="60"
@@ -88,7 +96,6 @@
                             Text="{x:Bind ViewModel.SelectedSession.StartTime, Mode=OneWay}" />
                         <TextBox
                             Grid.Column="2"
-                            MinWidth="60"
                             PlaceholderText="End Time"
                             Style="{StaticResource ButtonStyle}"
                             Text="{x:Bind ViewModel.SelectedSession.StartTime, Mode=OneWay}" />
@@ -261,7 +268,7 @@
                                         Grid.Column="1"
                                         Padding="5"
                                         Foreground="{StaticResource TextColor}"
-                                        Text="1:15:21"
+                                        Text="{Binding Converter={StaticResource DatesToTimeSpanConverter}}"
                                         TextAlignment="Right" />
                                     <TextBlock
                                         Grid.Row="2"
