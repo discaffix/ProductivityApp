@@ -7,11 +7,11 @@
     <Brush x:Key="MainBackgroundColor">#070707</Brush>
     <Brush x:Key="ButtonBackgroundColor">#131313</Brush>
     <Brush x:Key="ItemAndPaneBackgroundColor">#040404</Brush>
-    <Brush x:Key="DefaultTextColor">#CDCDCD</Brush>
+    <Brush x:Key="TextColor">#CDCDCD</Brush>
 
     <Style x:Key="ButtonStyle" TargetType="Control">
         <Setter Property="Background" Value="{StaticResource ButtonBackgroundColor}" />
-        <Setter Property="Foreground" Value="{StaticResource DefaultTextColor}" />
+        <Setter Property="Foreground" Value="{StaticResource TextColor}" />
         <Setter Property="BorderThickness" Value="0" />
         <!--<Setter Property="Margin" Value="{StaticResource SmallTopRightMargin}" />-->
     </Style>
@@ -19,6 +19,6 @@
     <Style
         x:Key="AutoSuggestBoxStyle"
         BasedOn="{StaticResource ButtonStyle}"
-        TargetType="AutoSuggestBox" />
-
+        TargetType="TextBox" />
+    
 </ResourceDictionary>

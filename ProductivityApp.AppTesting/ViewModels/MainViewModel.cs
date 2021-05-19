@@ -5,6 +5,7 @@ using ProductivityApp.AppTesting.DataAccess;
 using System.Windows.Input;
 using System;
 using System.Diagnostics;
+using System.Globalization;
 using System.Linq;
 using System.Net.Http;
 using Windows.UI.Xaml;
@@ -14,6 +15,8 @@ using Windows.System;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
 using GalaSoft.MvvmLight.Command;
+
+using Microsoft.Toolkit.Uwp.Notifications;
 using ProductivityApp.AppTesting.Helpers;
 
 namespace ProductivityApp.AppTesting.ViewModels
@@ -71,7 +74,19 @@ namespace ProductivityApp.AppTesting.ViewModels
 
         public async void DeleteDatabaseEntry()
         {
-            await _dataAccess.DeleteDatabaseEntry(SelectedSession);
+            var success = await _dataAccess.DeleteDatabaseEntry(SelectedSession);
+
+            if (!success) return;
+
+            // https://docs.microsoft.com/en-us/windows/uwp/design/shell/tiles-and-notifications/adaptive-interactive-toasts?tabs=builder-syntax
+
+            new ToastContentBuilder()
+                .AddText("Session Deleted", hintMaxLines: 1)
+                .AddText($"Id: {SelectedSession.SessionId}")
+                .AddText(DateTime.Now.ToShortTimeString())
+                .Show();
+
+            await LoadSessionsAsync();
             SelectedSession = null;
         }
 
@@ -100,6 +115,8 @@ namespace ProductivityApp.AppTesting.ViewModels
 
             if (success)
                 await LoadSessionsAsync();
+
+         
         }
 
         public void StartSession()

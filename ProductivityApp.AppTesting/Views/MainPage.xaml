@@ -158,7 +158,7 @@
                             HorizontalContentAlignment="left"
                             Background="{StaticResource ButtonBackgroundColor}"
                             Content="+ Click here to add details."
-                            Foreground="{StaticResource DefaultTextColor}"
+                            Foreground="{StaticResource TextColor}"
                             IsEnabled="False"
                             Visibility="Collapsed" />
                         <Button
@@ -254,20 +254,20 @@
                                         Grid.Row="1"
                                         Grid.Column="0"
                                         Padding="5"
-                                        Foreground="{StaticResource DefaultTextColor}"
+                                        Foreground="{StaticResource TextColor}"
                                         Text="{Binding Description}" />
                                     <TextBlock
                                         Grid.Row="1"
                                         Grid.Column="1"
                                         Padding="5"
-                                        Foreground="{StaticResource DefaultTextColor}"
+                                        Foreground="{StaticResource TextColor}"
                                         Text="1:15:21"
                                         TextAlignment="Right" />
                                     <TextBlock
                                         Grid.Row="2"
                                         Grid.Column="0"
                                         Padding="5"
-                                        Foreground="{StaticResource DefaultTextColor}"
+                                        Foreground="{StaticResource TextColor}"
                                         Text="{Binding Project.ProjectName}" />
                                 </Grid>
                             </DataTemplate>
