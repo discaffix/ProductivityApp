@@ -1,9 +1,9 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     <SolidColorBrush x:Key="ThemeControlForegroundBaseHighBrush" Color="{ThemeResource SystemBaseHighColor}" />
 
-    <Brush x:Key="MainBackgroundColor">#070707</Brush>
-    <Brush x:Key="ButtonBackgroundColor">#131313</Brush>
-    <Brush x:Key="ItemAndPaneBackgroundColor">#040404</Brush>
+    <Brush x:Key="MainBackgroundColor">#202020</Brush>
+    <Brush x:Key="ButtonBackgroundColor">#303030</Brush>
+    <Brush x:Key="ItemAndPaneBackgroundColor">#191919</Brush>
     <Brush x:Key="TextColor">#CDCDCD</Brush>
 
     <Style x:Key="ButtonStyle" TargetType="Control">
