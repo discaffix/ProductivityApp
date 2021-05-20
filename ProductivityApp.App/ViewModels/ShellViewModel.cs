@@ -25,6 +25,7 @@ namespace ProductivityApp.App.ViewModels
         private ICommand _loadedCommand;
         private ICommand _menuViewsMainCommand;
         private ICommand _menuFilesSettingsCommand;
+        private ICommand _menuViewsSignInCommand;
         private ICommand _menuFileExitCommand;
 
         public ICommand LoadedCommand => _loadedCommand ?? (_loadedCommand = new RelayCommand(OnLoaded));
@@ -32,6 +33,8 @@ namespace ProductivityApp.App.ViewModels
         public ICommand MenuViewsMainCommand => _menuViewsMainCommand ?? (_menuViewsMainCommand = new RelayCommand(OnMenuViewsMain));
 
         public ICommand MenuFileSettingsCommand => _menuFilesSettingsCommand ?? (_menuFilesSettingsCommand = new RelayCommand(OnMenuFileSettings));
+
+        public ICommand MenuViewsSignInCommand => _menuViewsSignInCommand ?? (_menuViewsSignInCommand = new RelayCommand(OnMenuViewsSignIn));
 
         public ICommand MenuFileExitCommand => _menuFileExitCommand ?? (_menuFileExitCommand = new RelayCommand(OnMenuFileExit));
 
@@ -57,6 +60,8 @@ namespace ProductivityApp.App.ViewModels
         private void OnMenuViewsMain() => MenuNavigationHelper.UpdateView(typeof(MainPage));
 
         private void OnMenuFileSettings() => MenuNavigationHelper.OpenInRightPane(typeof(SettingsPage));
+
+        private void OnMenuViewsSignIn() => MenuNavigationHelper.UpdateView(typeof(SignInPage));
 
         private void OnMenuFileExit()
         {

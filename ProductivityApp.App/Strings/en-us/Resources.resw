@@ -189,4 +189,12 @@
     <value>Settings</value>
     <comment>Menu item text for Settings</comment>
   </data>
+  <data name="SignIn_Title.Text" xml:space="preserve">
+    <value>SignIn</value>
+    <comment>Page title for SignInPage</comment>
+  </data>
+  <data name="ShellMenuItem_Views_SignIn.Text" xml:space="preserve">
+    <value>SignIn</value>
+    <comment>Menu item text for SignIn</comment>
+  </data>
 </root>
