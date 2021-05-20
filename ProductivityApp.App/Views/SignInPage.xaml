@@ -4,41 +4,35 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
+    xmlns:core="using:Microsoft.Xaml.Interactions.Core"
     Style="{StaticResource PageStyle}"
     mc:Ignorable="d">
+
+    <interactivity:Interaction.Behaviors>
+        <core:EventTriggerBehavior EventName="Loaded">
+            <core:EventTriggerBehavior.Actions>
+                <core:InvokeCommandAction Command="{x:Bind ViewModel.PageLoadedCommand}" />
+            </core:EventTriggerBehavior.Actions>
+        </core:EventTriggerBehavior>
+    </interactivity:Interaction.Behaviors>
+
     <Grid x:Name="ContentArea" Margin="{StaticResource MediumLeftRightMargin}">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="48" />
-            <RowDefinition Height="*" />
-        </Grid.RowDefinitions>
+        <Grid Width="200" RowSpacing="15" VerticalAlignment="Center">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="35"/>
+                <RowDefinition Height="35"/>
+                <RowDefinition Height="35"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="auto"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
 
-        <TextBlock
-            Grid.Row="0"
-            x:Uid="SignIn_Title"
-            Style="{StaticResource PageTitleStyle}" />
-        <Grid
-            Grid.Row="1" 
-            Background="{ThemeResource SystemControlPageBackgroundChromeLowBrush}">
-            <!--
-                The SystemControlPageBackgroundChromeLowBrush background represents where you should place your content. 
-                Place your content here.
-            -->
-            <Grid Width="200" RowSpacing="15">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="35"/>
-                    <RowDefinition Height="35"/>
-                    <RowDefinition Height="35"/>
-                </Grid.RowDefinitions>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="auto"/>
-                    <ColumnDefinition Width="*"/>
-                </Grid.ColumnDefinitions>
-
-                <TextBox Grid.Row="0" Grid.ColumnSpan="2" PlaceholderText="Username" Text="{x:Bind ViewModel.UsernameField, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                <TextBox Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2" PlaceholderText="Password" Text="{x:Bind ViewModel.PasswordField, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                <Button Margin="0,0,5,0" Grid.Row="2" Grid.Column="0" Content="Log In"/>
-                <Button Grid.Row="2" Grid.Column="1" Content="Register" Command="{x:Bind ViewModel.LoginCommand}"/>
-            </Grid>
+            <TextBox IsSpellCheckEnabled="False"  Grid.Row="0" Grid.ColumnSpan="2" PlaceholderText="Email" Text="{x:Bind ViewModel.EmailField, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+            <PasswordBox Grid.Column="0"  Grid.Row="1" Grid.ColumnSpan="2" PlaceholderText="Password" Password="{x:Bind ViewModel.PasswordField, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+            <Button Margin="0,0,5,0" Grid.Row="2" Grid.Column="0" Content="Login"  Command="{x:Bind ViewModel.LoginCommand}"/>
+            <Button Grid.Row="2" Grid.Column="1" Content="Register"/>
         </Grid>
     </Grid>
 </Page>

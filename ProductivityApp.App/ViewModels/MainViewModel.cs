@@ -7,13 +7,17 @@ using System.Net.Http;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using Windows.Storage;
 using Windows.System;
 using Windows.UI.Xaml;
+using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
 using Microsoft.Toolkit.Mvvm.Input;
 using Microsoft.Toolkit.Uwp.Notifications;
 using ProductivityApp.App.DataAccess;
 using ProductivityApp.App.Helpers;
+using ProductivityApp.App.Services;
+using ProductivityApp.App.Views;
 using ProductivityApp.Model;
 using ObservableObject = Microsoft.Toolkit.Mvvm.ComponentModel.ObservableObject;
 
@@ -31,6 +35,7 @@ namespace ProductivityApp.App.ViewModels
         public ICommand SaveChangesCommand;
         public ICommand PageLoadedCommand;
         public ICommand DeleteEntryCommand;
+
         // text
         private string _sessionDescription = string.Empty;
         private string _elapsedTime = string.Empty;
@@ -48,7 +53,6 @@ namespace ProductivityApp.App.ViewModels
         private ObservableCollection<Project> _projects = new ObservableCollection<Project>();
         private ObservableCollection<Project> _queriedProjects = new ObservableCollection<Project>();
         private ObservableCollection<Session> _sessions = new ObservableCollection<Session>();
-
         private ObservableCollection<GroupInfosList> _groupedSessions = new ObservableCollection<GroupInfosList>();
 
         private Session _selectedSession;
@@ -56,10 +60,9 @@ namespace ProductivityApp.App.ViewModels
         private readonly CrudOperations _dataAccess = new CrudOperations("http://localhost:60098/api", new HttpClient());
 
         public MainViewModel()
-
         {
             var timer = new DispatcherTimer();
-
+                
             timer.Tick += Timer_Tick;
             timer.Interval = new TimeSpan(0, 0, 1);
             timer.Start();
@@ -76,8 +79,30 @@ namespace ProductivityApp.App.ViewModels
 
         public async void PageLoaded()
         {
+          
+            var composite = (ApplicationDataCompositeValue) ApplicationData.Current.LocalSettings.Values["user"];
+            var userId = 0;
+
+            try
+            {
+                if (composite == null || (int) composite["id"] == 0)
+                {
+                    MenuNavigationHelper.UpdateView(typeof(SignInPage));
+                    return;
+                }
+                else
+                {
+                    userId = (int)composite["id"];
+                }
+            }
+            catch (NullReferenceException e)
+            {
+                Debug.WriteLine(e);
+            }
+
             await LoadProjectsASync();
             await LoadSessionsAsync();
+
         }
 
         public async void DeleteDatabaseEntry()
@@ -120,11 +145,8 @@ namespace ProductivityApp.App.ViewModels
         public async void SaveChangesToDatabaseEntry()
         {
             var success = await _dataAccess.UpdateDatabaseEntry(SelectedSession);
-
             if (success)
                 await LoadSessionsAsync();
-
-
         }
 
         /// <summary>
