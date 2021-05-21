@@ -43,6 +43,7 @@
                 <winui:MenuBarItem x:Uid="ShellMenuBarItem_Views">
                     <MenuFlyoutItem x:Uid="ShellMenuItem_Views_Main" Command="{x:Bind ViewModel.MenuViewsMainCommand}" />
                     <MenuFlyoutItem x:Uid="ShellMenuItem_Views_SignIn" Command="{x:Bind ViewModel.MenuViewsSignInCommand}" />
+                    <MenuFlyoutItem x:Uid="ShellMenuItem_Views_Register" Command="{x:Bind ViewModel.MenuViewsRegisterCommand}" />
                 </winui:MenuBarItem>
             </winui:MenuBar>
             <Grid Grid.Row="1">

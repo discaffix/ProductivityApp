@@ -6,6 +6,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
     xmlns:core="using:Microsoft.Xaml.Interactions.Core"
+    xmlns:controls="using:Microsoft.UI.Xaml.Controls"
     Style="{StaticResource PageStyle}"
     mc:Ignorable="d">
 
@@ -23,16 +24,19 @@
                 <RowDefinition Height="35"/>
                 <RowDefinition Height="35"/>
                 <RowDefinition Height="35"/>
+                <RowDefinition Height="35"/>
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="auto"/>
                 <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
 
-            <TextBox IsSpellCheckEnabled="False"  Grid.Row="0" Grid.ColumnSpan="2" PlaceholderText="Email" Text="{x:Bind ViewModel.EmailField, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-            <PasswordBox Grid.Column="0"  Grid.Row="1" Grid.ColumnSpan="2" PlaceholderText="Password" Password="{x:Bind ViewModel.PasswordField, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+            <TextBox IsSpellCheckEnabled="False"  Grid.Row="0" Grid.ColumnSpan="3" PlaceholderText="Email" Text="{x:Bind ViewModel.EmailField, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+            <PasswordBox Grid.Column="0"  Grid.Row="1" Grid.ColumnSpan="3" PlaceholderText="Password" Password="{x:Bind ViewModel.PasswordField, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
             <Button Margin="0,0,5,0" Grid.Row="2" Grid.Column="0" Content="Login"  Command="{x:Bind ViewModel.LoginCommand}"/>
             <Button Grid.Row="2" Grid.Column="1" Content="Register"/>
+            <controls:ProgressRing Grid.Row="3" Width="35" Grid.Column="1" IsActive="True" />
         </Grid>
     </Grid>
 </Page>

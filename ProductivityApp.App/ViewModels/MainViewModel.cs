@@ -58,7 +58,7 @@ namespace ProductivityApp.App.ViewModels
         private Session _selectedSession;
 
         private readonly CrudOperations _dataAccess = new CrudOperations("http://localhost:60098/api", new HttpClient());
-
+        private int _userId = 0;
         public MainViewModel()
         {
             var timer = new DispatcherTimer();
@@ -81,8 +81,7 @@ namespace ProductivityApp.App.ViewModels
         {
           
             var composite = (ApplicationDataCompositeValue) ApplicationData.Current.LocalSettings.Values["user"];
-            var userId = 0;
-
+            
             try
             {
                 if (composite == null || (int) composite["id"] == 0)
@@ -92,7 +91,7 @@ namespace ProductivityApp.App.ViewModels
                 }
                 else
                 {
-                    userId = (int)composite["id"];
+                    _userId = (int)composite["id"];
                 }
             }
             catch (NullReferenceException e)
@@ -168,7 +167,7 @@ namespace ProductivityApp.App.ViewModels
         {
             StopSessionBtnEnabled = false;
             _session.EndTime = DateTime.Now;
-            _session.UserId = 1;
+            _session.UserId = _userId;
             _session.ProjectId = 1;
 
             try
@@ -230,8 +229,9 @@ namespace ProductivityApp.App.ViewModels
 
             var sessions = await _dataAccess.GetDataFromUri<Session>("sessions");
 
+
             foreach (var session in sessions)
-                if (!string.IsNullOrWhiteSpace(session.Description))
+                if (!string.IsNullOrWhiteSpace(session.Description) && session.UserId == _userId)
                     Sessions.Add(session);
 
             Sessions = new ObservableCollection<Session>(Sessions.OrderByDescending(d => d.StartTime));

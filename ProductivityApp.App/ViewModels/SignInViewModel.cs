@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.Linq;
 using System.Net.Http;
+using System.Threading.Tasks;
 using System.Windows.Input;
 using Windows.Storage;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
@@ -25,7 +26,7 @@ namespace ProductivityApp.App.ViewModels
         
         public SignInViewModel()
         {
-            LoginCommand = new RelayCommand(Login);
+            LoginCommand = new AsyncRelayCommand(Login);
             PageLoadedCommand = new RelayCommand(PageLoaded);
         }
 
@@ -35,7 +36,7 @@ namespace ProductivityApp.App.ViewModels
                 new ApplicationDataCompositeValue { ["id"] = 0 };
         }
 
-        private async void Login()
+        private async Task Login()
         {
             var users = await _dataAccess.GetDataFromUri<User>("Users");
 
