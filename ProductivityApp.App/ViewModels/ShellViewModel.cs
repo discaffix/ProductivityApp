@@ -29,6 +29,7 @@ namespace ProductivityApp.App.ViewModels
         private ICommand _menuViewsRegisterCommand;
         private ICommand _menuFileExitCommand;
 
+
         public ICommand LoadedCommand => _loadedCommand ?? (_loadedCommand = new RelayCommand(OnLoaded));
 
         public ICommand MenuViewsMainCommand => _menuViewsMainCommand ?? (_menuViewsMainCommand = new RelayCommand(OnMenuViewsMain));
@@ -40,6 +41,8 @@ namespace ProductivityApp.App.ViewModels
         public ICommand MenuViewsRegisterCommand => _menuViewsRegisterCommand ?? (_menuViewsRegisterCommand = new RelayCommand(OnMenuViewsRegister));
 
         public ICommand MenuFileExitCommand => _menuFileExitCommand ?? (_menuFileExitCommand = new RelayCommand(OnMenuFileExit));
+
+        
 
         public ShellViewModel()
         {

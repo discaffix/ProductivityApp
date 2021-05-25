@@ -27,14 +27,36 @@ namespace ProductivityApp.App.ViewModels
     {
         // NOTE: This class does not have generic properties, but it will be added in the future to make the code more readable
 
-        public ICommand StartSessionCommand;
-        public ICommand StopSessionCommand;
-        public ICommand SearchFieldEnterCommand;
-        public ICommand TextChangedCommand;
-        public ICommand OpenClosePaneCommand;
-        public ICommand SaveChangesCommand;
-        public ICommand PageLoadedCommand;
-        public ICommand DeleteEntryCommand;
+        private ICommand _startSessionCommand;
+        private ICommand _stopSessionCommand;
+        private ICommand _searchFieldEnterCommand;
+        private ICommand _textChangeCommand;
+        private ICommand _openClosePaneCommand;
+        private ICommand _saveChangesCommand;
+        private ICommand _pageLoadedCommand;
+        private ICommand _deleteEntryCommand;
+
+        public ICommand StartSessionCommand =>
+            _startSessionCommand ?? (_startSessionCommand = new RelayCommand(StartSession));
+        public ICommand StopSessionCommand =>
+            _stopSessionCommand ?? (_stopSessionCommand = new RelayCommand(StopSession));
+        public ICommand SearchFieldEnterCommand =>
+            _searchFieldEnterCommand ?? (_searchFieldEnterCommand = new RelayCommand<KeyRoutedEventArgs>(QuerySearchFieldProjectNames));
+
+        public ICommand TextChangedCommand =>
+            _textChangeCommand ?? (_textChangeCommand = new RelayCommand(TextChangedSuggestBox));
+
+        public ICommand OpenClosePaneCommand =>
+            _openClosePaneCommand ?? (_openClosePaneCommand = new RelayCommand(ChangePanelState));
+
+        public ICommand SaveChangesCommand =>
+            _saveChangesCommand ?? (_saveChangesCommand = new RelayCommand(SaveChangesToDatabaseEntry));
+
+        public ICommand PageLoadedCommand =>
+            _pageLoadedCommand ?? (_pageLoadedCommand = new RelayCommand(PageLoaded));
+
+        public ICommand DeleteEntryCommand =>
+            _deleteEntryCommand ?? (_deleteEntryCommand = new RelayCommand(DeleteDatabaseEntry));
 
         // text
         private string _sessionDescription = string.Empty;
@@ -59,22 +81,19 @@ namespace ProductivityApp.App.ViewModels
 
         private readonly CrudOperations _dataAccess = new CrudOperations("http://localhost:60098/api", new HttpClient());
         private int _userId = 0;
+
         public MainViewModel()
         {
+            StartDispatcherTimer();
+        }
+
+        private void StartDispatcherTimer()
+        {
             var timer = new DispatcherTimer();
-                
+
             timer.Tick += Timer_Tick;
             timer.Interval = new TimeSpan(0, 0, 1);
             timer.Start();
-
-            OpenClosePaneCommand = new RelayCommand(ChangePanelState);
-            TextChangedCommand = new RelayCommand(TextChangedSuggestBox);
-            StartSessionCommand = new RelayCommand(StartSession);
-            StopSessionCommand = new RelayCommand(StopSession);
-            SearchFieldEnterCommand = new RelayCommand<KeyRoutedEventArgs>(QuerySearchFieldProjectNames);
-            SaveChangesCommand = new RelayCommand(SaveChangesToDatabaseEntry);
-            DeleteEntryCommand = new RelayCommand(DeleteDatabaseEntry);
-            PageLoadedCommand = new RelayCommand(PageLoaded);
         }
 
         public async void PageLoaded()
