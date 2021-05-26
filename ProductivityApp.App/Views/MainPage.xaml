@@ -88,13 +88,40 @@
 
                     </AutoSuggestBox>
                     <TextBlock Margin="0,10,0,0" Text="Tags" />
-                    <TextBox
+                    <Button
                         MinWidth="150"
                         Margin="5"
-                        PlaceholderText="Select a Tag"
+                        
                         Style="{StaticResource ButtonStyle}"
-                        Text="{x:Bind ViewModel.SessionDescription, Mode=TwoWay}" />
+                        Content="Click To Add a Tag" Width="288">
+                        <Button.Flyout>
+                            <Flyout>
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="*"/>
+                                    </Grid.RowDefinitions>
 
+                                    <TextBox Grid.Row="0"
+                                             Style="{StaticResource ButtonStyle}"
+                                             PlaceholderText="Search for Tag"
+                                    />
+
+                                    <ListView Grid.Row="1" SelectionMode="None" ItemsSource="{x:Bind ViewModel.Sessions, Mode=OneWay}">
+                                        <ListView.ItemTemplate>
+                                            <DataTemplate>
+                                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+                                                    <CheckBox Content="{Binding SessionId}"/>
+                                                </StackPanel>
+                                            </DataTemplate>
+                                        </ListView.ItemTemplate>
+                                    </ListView>
+                                </Grid>
+                            </Flyout>
+                        </Button.Flyout>
+
+                    </Button>
+                    
                     <TextBlock Margin="0,10,0,0" Text="Duration" />
                     <Grid ColumnSpacing="5" CornerRadius="5">
 
@@ -312,8 +339,6 @@
                             </DataTemplate>
                         </ListView.ItemTemplate>
 
-
-
                         <ListView.GroupStyle>
                             <GroupStyle>
                                 <GroupStyle.HeaderTemplate>
@@ -325,58 +350,6 @@
                         </ListView.GroupStyle>
 
                     </ListView>
-
-                    <!--<ListView
-                        Grid.Row="2"
-                        ItemsSource="{x:Bind ViewModel.Sessions, Mode=OneWay}"
-                        SelectedItem="{x:Bind ViewModel.SelectedSession, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
-
-                        <ListView.ItemContainerStyle>
-                            <Style TargetType="ListViewItem">
-                                <Setter Property="HorizontalAlignment" Value="Stretch" />
-                                <Setter Property="HorizontalContentAlignment" Value="Stretch" />
-                                <Setter Property="Margin" Value="10" />
-                            </Style>
-                        </ListView.ItemContainerStyle>
-                        <ListView.ItemTemplate>
-                            <DataTemplate>
-                                <Grid
-                                    Margin="10"
-                                    Padding="5"
-                                    Background="{StaticResource ItemAndPaneBackgroundColor}">
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition Height="*" />
-                                        <RowDefinition Height="*" />
-                                        <RowDefinition Height="*" />
-                                    </Grid.RowDefinitions>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="*" />
-                                        <ColumnDefinition Width="*" />
-                                    </Grid.ColumnDefinitions>
-                                    <TextBlock Padding="5" Text="{Binding StartTime}" />
-                                    <TextBlock
-                                        Grid.Row="1"
-                                        Grid.Column="0"
-                                        Padding="5"
-                                        Foreground="{StaticResource TextColor}"
-                                        Text="{Binding Description}" />
-                                    <TextBlock
-                                        Grid.Row="1"
-                                        Grid.Column="1"
-                                        Padding="5"
-                                        Foreground="{StaticResource TextColor}"
-                                        Text="{Binding Converter={StaticResource DatesToTimeSpanConverter}}"
-                                        TextAlignment="Right" />
-                                    <TextBlock
-                                        Grid.Row="2"
-                                        Grid.Column="0"
-                                        Padding="5"
-                                        Foreground="{StaticResource TextColor}"
-                                        Text="{Binding Project.ProjectName}" />
-                                </Grid>
-                            </DataTemplate>
-                        </ListView.ItemTemplate>
-                    </ListView>-->
                 </Grid>
             </Grid>
         </SplitView>

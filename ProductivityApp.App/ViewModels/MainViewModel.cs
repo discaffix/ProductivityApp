@@ -42,7 +42,6 @@ namespace ProductivityApp.App.ViewModels
             _stopSessionCommand ?? (_stopSessionCommand = new RelayCommand(StopSession));
         public ICommand SearchFieldEnterCommand =>
             _searchFieldEnterCommand ?? (_searchFieldEnterCommand = new RelayCommand<KeyRoutedEventArgs>(QuerySearchFieldProjectNames));
-
         public ICommand TextChangedCommand =>
             _textChangeCommand ?? (_textChangeCommand = new RelayCommand(TextChangedSuggestBox));
 
@@ -96,6 +95,9 @@ namespace ProductivityApp.App.ViewModels
             timer.Start();
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public async void PageLoaded()
         {
           
@@ -108,10 +110,8 @@ namespace ProductivityApp.App.ViewModels
                     MenuNavigationHelper.UpdateView(typeof(SignInPage));
                     return;
                 }
-                else
-                {
-                    _userId = (int)composite["id"];
-                }
+
+                _userId = (int)composite["id"];
             }
             catch (NullReferenceException e)
             {

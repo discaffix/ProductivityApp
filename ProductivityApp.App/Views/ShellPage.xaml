@@ -30,7 +30,6 @@
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
 
@@ -48,19 +47,9 @@
                     <MenuFlyoutItem x:Uid="ShellMenuItem_Views_Register" Command="{x:Bind ViewModel.MenuViewsRegisterCommand}" />
                 </winui:MenuBarItem>
             </winui:MenuBar>
-            <winui:NavigationView Grid.Row="1" x:Name="nvSample" PaneDisplayMode="Top"
-                                  SelectionFollowsFocus="Enabled" IsBackButtonVisible="Collapsed"
-                                  >
-                <winui:NavigationView.MenuItems>
-                    <winui:NavigationViewItem Icon="Play" Content="Main" x:Name="SamplePage1Item" />
-                    <winui:NavigationViewItem Icon="Save" Content="Home" x:Name="SamplePage2Item" />
-                </winui:NavigationView.MenuItems>
-                <Frame x:Name="contentFrame"/>
-            </winui:NavigationView>
-            <Grid Grid.Row="2">
+            <Grid Grid.Row="1">
                 <Frame x:Name="shellFrame" />
             </Grid>
         </Grid>
     </SplitView>
-
 </Page>
