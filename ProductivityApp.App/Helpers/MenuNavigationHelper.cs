@@ -1,9 +1,7 @@
-﻿using System;
-using System.Threading.Tasks;
-
-using ProductivityApp.App.Services;
+﻿using ProductivityApp.App.Services;
 using ProductivityApp.App.Views;
-
+using System;
+using System.Threading.Tasks;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media.Animation;
 
@@ -23,7 +21,7 @@ namespace ProductivityApp.App.Helpers
 
         public static void UpdateView(Type pageType, object parameters = null, NavigationTransitionInfo infoOverride = null)
         {
-             NavigationService.Navigate(pageType, parameters, infoOverride, true);
+            NavigationService.Navigate(pageType, parameters, infoOverride, true);
         }
 
         public static void Navigate(Type pageType, object parameter = null, NavigationTransitionInfo infoOverride = null)

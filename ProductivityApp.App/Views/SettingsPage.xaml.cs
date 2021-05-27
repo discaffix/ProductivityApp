@@ -1,5 +1,4 @@
-﻿using System;
-
+﻿
 using ProductivityApp.App.ViewModels;
 
 using Windows.UI.Xaml.Controls;

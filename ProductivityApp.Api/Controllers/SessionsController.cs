@@ -1,12 +1,12 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using ProductivityApp.DataAccess;
+using ProductivityApp.Model;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using ProductivityApp.DataAccess;
-using ProductivityApp.Model;
 
 namespace ProductivityApp.Api.Controllers
 {
@@ -22,37 +22,37 @@ namespace ProductivityApp.Api.Controllers
         }
 
         // GET: api/Sessions
-    [HttpGet]
-    public async Task<ActionResult<IEnumerable<Session>>> GetSessions()
-    {
-        // get the session, with ProjectId and ProjectName from the Project
-        var sessions = await _context.Sessions
-            .Include(s => s.Project)
-            .Select(s => new Session()
-            {
-                SessionId = s.SessionId,
-                Description = s.Description,
-                StartTime = s.StartTime,
-                EndTime = s.EndTime,
-                UserId = s.UserId,
-                ProjectId = s.ProjectId,
-                Project = new Project()
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<Session>>> GetSessions()
+        {
+            // get the session, with ProjectId and ProjectName from the Project
+            var sessions = await _context.Sessions
+                .Include(s => s.Project)
+                .Select(s => new Session()
                 {
-                    ProjectId = s.Project.ProjectId,
-                    ProjectName = s.Project.ProjectName
-                },
-                Tags = s.Tags
-            })
-            
-            .ToListAsync();
+                    SessionId = s.SessionId,
+                    Description = s.Description,
+                    StartTime = s.StartTime,
+                    EndTime = s.EndTime,
+                    UserId = s.UserId,
+                    ProjectId = s.ProjectId,
+                    Project = new Project()
+                    {
+                        ProjectId = s.Project.ProjectId,
+                        ProjectName = s.Project.ProjectName
+                    },
+                    Tags = s.Tags
+                })
 
-        return sessions;
-    }
+                .ToListAsync();
+
+            return sessions;
+        }
 
         // GET: api/Sessions/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Session>> GetSession(int id)
-        {   
+        {
             var session = await _context.Sessions.FindAsync(id);
 
             if (session == null)

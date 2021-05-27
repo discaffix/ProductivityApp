@@ -1,7 +1,5 @@
 ﻿using System;
 
-using ProductivityApp.App.Helpers;
-
 using Windows.UI.Core;
 using Windows.UI.ViewManagement;
 

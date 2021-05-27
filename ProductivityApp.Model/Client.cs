@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace ProductivityApp.Model
 {
@@ -10,9 +9,9 @@ namespace ProductivityApp.Model
         /// Gets or sets the client identifier.
         /// </summary>
         public int ClientId { get; set; }
-        
+
         public string Name { get; set; }
-        
+
         public DateTimeOffset DateAdded { get; set; }
 
         /// <summary>
@@ -20,4 +19,4 @@ namespace ProductivityApp.Model
         /// </summary>
         public ICollection<Project> Projects { get; } = new List<Project>();
     }
-}   
+}

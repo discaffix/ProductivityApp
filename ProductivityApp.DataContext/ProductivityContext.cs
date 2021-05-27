@@ -1,7 +1,6 @@
 ﻿using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using ProductivityApp.Model;
-using System;
 
 namespace ProductivityApp.DataAccess
 {
@@ -23,8 +22,8 @@ namespace ProductivityApp.DataAccess
         public DbSet<Workspace> Workspaces { get; set; }
         public DbSet<SessionTag> SessionTags { get; set; }
 
-        public ProductivityContext(DbContextOptions<ProductivityContext> options) : base (options) { }
-        
+        public ProductivityContext(DbContextOptions<ProductivityContext> options) : base(options) { }
+
         /// <summary>
         /// <para>
         /// Override this method to configure the database (and other options) to be used for this context.

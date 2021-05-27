@@ -1,7 +1,5 @@
-﻿using System;
-
-using ProductivityApp.App.Services;
-
+﻿using ProductivityApp.App.Services;
+using System;
 using Windows.ApplicationModel.Activation;
 using Windows.UI.Xaml;
 

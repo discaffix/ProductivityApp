@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using ProductivityApp.Model;
+using System;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Data;
-using ProductivityApp.Model;
 
 namespace ProductivityApp.App.Converters
 {
@@ -13,9 +9,9 @@ namespace ProductivityApp.App.Converters
     {
         public object Convert(object value, Type targetType, object parameter, string language)
         {
-            var args = (AutoSuggestBoxQuerySubmittedEventArgs) value;
+            var args = (AutoSuggestBoxQuerySubmittedEventArgs)value;
 
-            return (Project) args.ChosenSuggestion;
+            return (Project)args.ChosenSuggestion;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, string language)

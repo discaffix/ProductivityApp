@@ -1,8 +1,6 @@
-﻿using System;
+﻿using ProductivityApp.App.Services;
+using System;
 using System.Threading.Tasks;
-
-using ProductivityApp.App.Services;
-
 using Windows.ApplicationModel.Activation;
 
 namespace ProductivityApp.App.Activation

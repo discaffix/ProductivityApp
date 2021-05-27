@@ -1,14 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Windows.Input;
-
-using Microsoft.Toolkit.Mvvm.ComponentModel;
+﻿using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.Input;
-
 using ProductivityApp.App.Helpers;
 using ProductivityApp.App.Services;
 using ProductivityApp.App.Views;
-
+using System.Collections.Generic;
+using System.Windows.Input;
 using Windows.System;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -42,7 +38,7 @@ namespace ProductivityApp.App.ViewModels
 
         public ICommand MenuFileExitCommand => _menuFileExitCommand ?? (_menuFileExitCommand = new RelayCommand(OnMenuFileExit));
 
-        
+
 
         public ShellViewModel()
         {

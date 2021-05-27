@@ -1,9 +1,7 @@
-﻿using System;
+﻿using ProductivityApp.App.Core.Helpers;
+using System;
 using System.IO;
 using System.Threading.Tasks;
-
-using ProductivityApp.App.Core.Helpers;
-
 using Windows.Storage;
 using Windows.Storage.Streams;
 

@@ -1,7 +1,5 @@
-﻿using System;
-
-using ProductivityApp.App.ViewModels;
-
+﻿using ProductivityApp.App.ViewModels;
+using System;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media.Animation;
@@ -15,7 +13,7 @@ namespace ProductivityApp.App.Views
         private ShellContentDialog(Type pageType, object parameter = null, NavigationTransitionInfo infoOverride = null)
         {
             InitializeComponent();
-            shellFrame.Navigate(pageType, parameter,  infoOverride);
+            shellFrame.Navigate(pageType, parameter, infoOverride);
             shellFrame.Width = Window.Current.Bounds.Width * 0.8;
             shellFrame.Height = Window.Current.Bounds.Height * 0.8;
         }

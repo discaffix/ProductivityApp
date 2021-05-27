@@ -1,16 +1,14 @@
-﻿using System;
-using System.Diagnostics;
-using System.Linq;
-using System.Net.Http;
-using System.Threading.Tasks;
-using System.Windows.Input;
-using Windows.Storage;
-using Microsoft.Toolkit.Mvvm.ComponentModel;
+﻿using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.Input;
 using ProductivityApp.App.DataAccess;
 using ProductivityApp.App.Helpers;
 using ProductivityApp.App.Views;
 using ProductivityApp.Model;
+using System.Linq;
+using System.Net.Http;
+using System.Threading.Tasks;
+using System.Windows.Input;
+using Windows.Storage;
 
 namespace ProductivityApp.App.ViewModels
 {
@@ -23,7 +21,7 @@ namespace ProductivityApp.App.ViewModels
 
         private readonly CrudOperations _dataAccess = new CrudOperations("http://localhost:60098/api", new HttpClient());
 
-        
+
         public SignInViewModel()
         {
             LoginCommand = new AsyncRelayCommand(Login);
@@ -50,7 +48,7 @@ namespace ProductivityApp.App.ViewModels
             if (validUser.Count != 1) return;
 
             ApplicationData.Current.LocalSettings.Values["user"] =
-                new ApplicationDataCompositeValue() {["id"] = validUser[0].UserId};
+                new ApplicationDataCompositeValue() { ["id"] = validUser[0].UserId };
 
             MenuNavigationHelper.UpdateView(typeof(MainPage));
         }

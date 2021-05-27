@@ -1,8 +1,6 @@
-﻿using System;
+﻿using ProductivityApp.App.Helpers;
+using System;
 using System.Threading.Tasks;
-
-using ProductivityApp.App.Helpers;
-
 using Windows.ApplicationModel.Core;
 using Windows.Storage;
 using Windows.UI.Core;

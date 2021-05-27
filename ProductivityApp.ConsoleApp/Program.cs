@@ -9,7 +9,8 @@ namespace ProductivityApp.ConsoleApp
         static void Main(string[] args)
         {
             // user object
-            var userOne = new User {
+            var userOne = new User
+            {
                 FirstName = "Andre",
                 LastName = "Hande",
                 EmailAddress = "andreeg@hiof.no",
@@ -45,7 +46,7 @@ namespace ProductivityApp.ConsoleApp
             //    Description = "Something"
             //};
 
-           
+
             //session_one.Tags.Add(new SessionTag() { Session = session_one, Tag = tag_one });
             using var db = new ProductivityContext();
 

@@ -8,7 +8,7 @@ namespace ProductivityApp.App.Converters
     {
         public object Convert(object value, Type targetType, object parameter, string language)
         {
-            var args = (AutoSuggestBox) value;
+            var args = (AutoSuggestBox)value;
 
             return args;
         }

@@ -12,7 +12,7 @@ namespace ProductivityApp.Model
         /// <summary>
         /// First name of the user.
         /// </summary>
-        [StringLength(maximumLength:50, ErrorMessage = "Maximum 50 letters for FirstName Property.")]
+        [StringLength(maximumLength: 50, ErrorMessage = "Maximum 50 letters for FirstName Property.")]
         [ConcurrencyCheck]
         [Required]
         public string FirstName { get; set; }
@@ -36,7 +36,7 @@ namespace ProductivityApp.Model
         public string Password { get; set; }
 
         public DateTimeOffset DateOfBirth { get; set; }
-    
+
         /// <summary>
         /// A collection of the workspaces (one-to-many)
         /// </summary>

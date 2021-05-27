@@ -1,13 +1,9 @@
-﻿using System;
-using System.Threading.Tasks;
-using System.Windows.Input;
-
-using Microsoft.Toolkit.Mvvm.ComponentModel;
+﻿using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.Input;
-
 using ProductivityApp.App.Helpers;
 using ProductivityApp.App.Services;
-
+using System.Threading.Tasks;
+using System.Windows.Input;
 using Windows.ApplicationModel;
 using Windows.UI.Xaml;
 

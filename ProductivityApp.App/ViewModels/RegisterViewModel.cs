@@ -1,13 +1,13 @@
-﻿using System;
-using System.Net.Http;
-using System.Threading.Tasks;
-using System.Windows.Input;
-using Microsoft.Toolkit.Mvvm.ComponentModel;
+﻿using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.Input;
 using ProductivityApp.App.DataAccess;
 using ProductivityApp.App.Helpers;
 using ProductivityApp.App.Views;
 using ProductivityApp.Model;
+using System;
+using System.Net.Http;
+using System.Threading.Tasks;
+using System.Windows.Input;
 
 namespace ProductivityApp.App.ViewModels
 {
@@ -48,7 +48,7 @@ namespace ProductivityApp.App.ViewModels
 
             var created = await _dataAccess.AddEntryToDatabase(user);
 
-            if(created)
+            if (created)
                 MenuNavigationHelper.UpdateView(typeof(SignInPage));
 
         }
