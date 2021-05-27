@@ -186,6 +186,18 @@ namespace ProductivityApp.App.ViewModels
         /// </summary>
         public async void PageLoaded()
         {
+            AuthenticationAttempt();
+
+            await LoadProjectsASync();
+            await LoadSessionsAsync();
+            await LoadSessionTagsAsync();
+        }
+
+        /// <summary>
+        /// Get the values
+        /// </summary>
+        public void AuthenticationAttempt()
+        {
             var composite = (ApplicationDataCompositeValue)ApplicationData.Current.LocalSettings.Values["user"];
 
             try
@@ -202,11 +214,8 @@ namespace ProductivityApp.App.ViewModels
             {
                 Debug.WriteLine(e);
             }
-
-            await LoadProjectsASync();
-            await LoadSessionsAsync();
-            await LoadSessionTagsAsync();
         }
+
 
         public async void DeleteDatabaseEntry()
         {
@@ -226,6 +235,10 @@ namespace ProductivityApp.App.ViewModels
             SelectedSession = null;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="searchFieldEnter"></param>
         public async void QuerySearchFieldProjectNames(KeyRoutedEventArgs searchFieldEnter)
         {
             // When the enter key is pressed in the search field
@@ -390,6 +403,8 @@ namespace ProductivityApp.App.ViewModels
         {
             Projects = new ObservableCollection<Project>();
             var projects = await _dataAccess.GetDataFromUri<Project>("projects");
+
+
             foreach (var project in projects)
                 if (!string.IsNullOrWhiteSpace(project.ProjectName))
                     Projects.Add(project);

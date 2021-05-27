@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using System;
+using System.Diagnostics;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
@@ -25,10 +26,21 @@ namespace ProductivityApp.App.DataAccess
         /// <returns>A list of objects returned from the GetRequest.</returns>
         internal async Task<T[]> GetDataFromUri<T>(string directTablePath) where T : class
         {
-            var uri = new Uri($"{BaseUri}/{directTablePath}");
-            var result = await HttpClient.GetAsync(uri);
-            var json = await result.Content.ReadAsStringAsync();
-            return JsonConvert.DeserializeObject<T[]>(json);
+            T[] returnValue = null;
+
+            try
+            {
+                var uri = new Uri($"{BaseUri}/{directTablePath}");
+                var result = await HttpClient.GetAsync(uri);
+                var json = await result.Content.ReadAsStringAsync();
+                returnValue = JsonConvert.DeserializeObject<T[]>(json);
+            }
+            catch (HttpRequestException e)
+            {
+                Debug.WriteLine(e);
+            }
+
+            return returnValue;
         }
 
         /// <summary>
