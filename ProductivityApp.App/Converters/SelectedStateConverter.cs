@@ -4,16 +4,17 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Windows.UI.Xaml.Data;
+using ProductivityApp.App.ViewModels;
+using ProductivityApp.Model;
 
 namespace ProductivityApp.App.Converters
 {
-    class DateToTimeOfDay : IValueConverter
+    class SelectedStateConverter : IValueConverter
     {
+
         public object Convert(object value, Type targetType, object parameter, string language)
         {
-            var date = (DateTimeOffset) value;
-
-            return date.ToString("HH:mm");
+            throw new NotImplementedException();
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, string language)

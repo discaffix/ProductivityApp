@@ -12,6 +12,8 @@ namespace ProductivityApp.Model
 
         public string Description { get; set; }
 
+        public int UserId { get; set; }
+
         public ICollection<SessionTag> Sessions { get; set; }
     }
 }

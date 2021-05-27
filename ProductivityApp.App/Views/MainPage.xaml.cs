@@ -14,5 +14,6 @@ namespace ProductivityApp.App.Views
         {
             InitializeComponent();
         }
+
     }
 }

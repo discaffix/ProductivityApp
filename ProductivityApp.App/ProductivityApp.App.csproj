@@ -140,13 +140,16 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Activation\ActivationHandler.cs" />
+    <Compile Include="Converters\AutoSuggestionBoxQueryParameterConverter.cs" />
     <Compile Include="Converters\AutoSuggestTextChangedParameterConverter.cs" />
     <Compile Include="Converters\DatesToTimeSpanConverter.cs" />
     <Compile Include="Converters\DateToTimeOfDay.cs" />
+    <Compile Include="Converters\SelectedStateConverter.cs" />
     <Compile Include="DataAccess\CrudOperations.cs" />
     <Compile Include="Helpers\EnumToBooleanConverter.cs" />
     <Compile Include="Helpers\GroupInfosList.cs" />
     <Compile Include="Helpers\MenuNavigationHelper.cs" />
+    <Compile Include="Helpers\SelectedSessionAndTags.cs" />
     <Compile Include="Helpers\SettingsStorageExtensions.cs" />
     <Compile Include="Services\ActivationService.cs" />
     <Compile Include="Activation\DefaultActivationHandler.cs" />

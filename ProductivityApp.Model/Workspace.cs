@@ -10,7 +10,7 @@ namespace ProductivityApp.Model
 
         public string Name { get; set; }
 
-        public DateTime DateAdded { get; set; }
+        public DateTimeOffset DateAdded { get; set; }
 
         public User CreatedByUser { get; set; }
 

@@ -3,17 +3,19 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Data;
+using ProductivityApp.Model;
 
 namespace ProductivityApp.App.Converters
 {
-    class DateToTimeOfDay : IValueConverter
+    class AutoSuggestionBoxQueryParameterConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, string language)
         {
-            var date = (DateTimeOffset) value;
+            var args = (AutoSuggestBoxQuerySubmittedEventArgs) value;
 
-            return date.ToString("HH:mm");
+            return (Project) args.ChosenSuggestion;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, string language)

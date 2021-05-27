@@ -25,7 +25,12 @@ namespace ProductivityApp.Api.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<SessionTag>>> GetSessionTags()
         {
-            return await _context.SessionTags.ToListAsync();
+            var sessionTags = await _context.SessionTags
+                .Include(p => p.Session)
+                .Include(p => p.Tag)
+                .ToListAsync();
+
+            return sessionTags;
         }
 
         // GET: api/SessionTags/5

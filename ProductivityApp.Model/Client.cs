@@ -13,7 +13,7 @@ namespace ProductivityApp.Model
         
         public string Name { get; set; }
         
-        public DateTime DateAdded { get; set; }
+        public DateTimeOffset DateAdded { get; set; }
 
         /// <summary>
         /// The property that defines the one-to-many relationship between project and client.

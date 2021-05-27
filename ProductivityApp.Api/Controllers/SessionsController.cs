@@ -40,8 +40,10 @@ namespace ProductivityApp.Api.Controllers
                 {
                     ProjectId = s.Project.ProjectId,
                     ProjectName = s.Project.ProjectName
-                }
+                },
+                Tags = s.Tags
             })
+            
             .ToListAsync();
 
         return sessions;
@@ -50,7 +52,7 @@ namespace ProductivityApp.Api.Controllers
         // GET: api/Sessions/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Session>> GetSession(int id)
-        {
+        {   
             var session = await _context.Sessions.FindAsync(id);
 
             if (session == null)

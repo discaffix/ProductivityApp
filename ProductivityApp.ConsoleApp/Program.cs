@@ -14,7 +14,7 @@ namespace ProductivityApp.ConsoleApp
                 LastName = "Hande",
                 EmailAddress = "andreeg@hiof.no",
                 Password = "InsaneGamer",
-                DateOfBirth = DateTime.Now
+                DateOfBirth = DateTimeOffset.Now
             };
 
             var userTwo = new User
@@ -23,13 +23,13 @@ namespace ProductivityApp.ConsoleApp
                 LastName = "Testy",
                 EmailAddress = "test@test.com",
                 Password = "test",
-                DateOfBirth = DateTime.Now
+                DateOfBirth = DateTimeOffset.Now
             };
 
             var workspaceOne = new Workspace
             {
                 Name = "My Workspace",
-                DateAdded = DateTime.Now,
+                DateAdded = DateTimeOffset.Now,
                 CreatedByUser = userTwo
             };
 
@@ -57,8 +57,8 @@ namespace ProductivityApp.ConsoleApp
             var sessionOne = new Session
             {
                 Description = "Redesigning MainView in ProductivityApp.AppTesting",
-                StartTime = DateTime.Now,
-                EndTime = DateTime.Now.AddHours(5),
+                StartTime = DateTimeOffset.Now,
+                EndTime = DateTimeOffset.Now.AddHours(5),
                 UserId = userTwo.UserId,
                 ProjectId = projectOne.ProjectId
             };

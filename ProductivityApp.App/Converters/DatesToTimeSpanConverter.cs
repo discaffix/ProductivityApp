@@ -1,5 +1,6 @@
 ﻿using System;
 using Windows.UI.Xaml.Data;
+using ProductivityApp.App.ViewModels;
 using ProductivityApp.Model;
 
 namespace ProductivityApp.App.Converters
@@ -13,7 +14,7 @@ namespace ProductivityApp.App.Converters
             
             var selectedSession = (Session) value;
             var span = (selectedSession.EndTime - selectedSession.StartTime);
-
+            
             return $@"{span:hh\:mm\:ss}";
         }
 

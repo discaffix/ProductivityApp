@@ -35,7 +35,17 @@ namespace ProductivityApp.App.ViewModels
         private ICommand _saveChangesCommand;
         private ICommand _pageLoadedCommand;
         private ICommand _deleteEntryCommand;
+        private ICommand _checkedTagBoxesCommand;
+        private ICommand _querySubmittedCommand;
 
+        private ICommand _checkTagCheckBoxCommand;
+        private ICommand _unCheckTagCheckBoxCommand;
+
+        public ICommand CheckTagCheckBoxCommand =>
+            _checkTagCheckBoxCommand ?? (_checkTagCheckBoxCommand = new RelayCommand(CheckBox));
+
+        public ICommand UnCheckTagCheckBoxCommand =>
+            _unCheckTagCheckBoxCommand ?? (_unCheckTagCheckBoxCommand = new RelayCommand(UnCheckBox));
         public ICommand StartSessionCommand =>
             _startSessionCommand ?? (_startSessionCommand = new RelayCommand(StartSession));
         public ICommand StopSessionCommand =>
@@ -57,6 +67,11 @@ namespace ProductivityApp.App.ViewModels
         public ICommand DeleteEntryCommand =>
             _deleteEntryCommand ?? (_deleteEntryCommand = new RelayCommand(DeleteDatabaseEntry));
 
+        public ICommand QuerySubmittedCommand => _querySubmittedCommand ??
+                                                 (_querySubmittedCommand = new RelayCommand<Project>(QuerySubmitted));
+
+        //public ICommand CheckedTagBoxesCommand => _checkedTagBoxesCommand ?? (_checkedTagBoxesCommand = new RelayCommand(CheckedBoxes()))
+
         // text
         private string _sessionDescription = string.Empty;
         private string _elapsedTime = string.Empty;
@@ -75,7 +90,8 @@ namespace ProductivityApp.App.ViewModels
         private ObservableCollection<Project> _queriedProjects = new ObservableCollection<Project>();
         private ObservableCollection<Session> _sessions = new ObservableCollection<Session>();
         private ObservableCollection<GroupInfosList> _groupedSessions = new ObservableCollection<GroupInfosList>();
-
+        private ObservableCollection<Tag> _tags = new ObservableCollection<Tag>();
+        private ObservableCollection<SessionTag> _sessionTags = new ObservableCollection<SessionTag>();
         private Session _selectedSession;
 
         private readonly CrudOperations _dataAccess = new CrudOperations("http://localhost:60098/api", new HttpClient());
@@ -100,7 +116,6 @@ namespace ProductivityApp.App.ViewModels
         /// </summary>
         public async void PageLoaded()
         {
-          
             var composite = (ApplicationDataCompositeValue) ApplicationData.Current.LocalSettings.Values["user"];
             
             try
@@ -120,7 +135,7 @@ namespace ProductivityApp.App.ViewModels
 
             await LoadProjectsASync();
             await LoadSessionsAsync();
-
+            await LoadSessionTagsAsync();
         }
 
         public async void DeleteDatabaseEntry()
@@ -134,7 +149,7 @@ namespace ProductivityApp.App.ViewModels
             new ToastContentBuilder()
                 .AddText("Session Deleted", hintMaxLines: 1)
                 .AddText($"Id: {SelectedSession.SessionId}")
-                .AddText(DateTime.Now.ToShortTimeString())
+                .AddText(DateTimeOffset.Now.ToString())
                 .Show();
 
             await LoadSessionsAsync();
@@ -158,6 +173,20 @@ namespace ProductivityApp.App.ViewModels
             // reload project if a value has been returned and parsed
             if (success)
                 await LoadProjectsASync();
+        }
+
+        public void QuerySubmitted(Project project)
+        {
+            SelectedSession.ProjectId = project.ProjectId;
+        }
+
+        public void CheckBox()
+        {
+
+        }
+        public void UnCheckBox()
+        {
+
         }
 
         public async void SaveChangesToDatabaseEntry()
@@ -241,6 +270,24 @@ namespace ProductivityApp.App.ViewModels
             ElapsedTime = !StartSessionBtnEnabled ? (DateTime.Now - _session.StartTime).ToString(@"hh\:mm\:ss") : string.Empty;
         }
 
+        private void CheckedBoxes(object sender, System.EventArgs e)
+        {
+
+        }
+
+        internal async Task LoadSessionTagsAsync()
+        {
+            var sessionTags = await _dataAccess.GetDataFromUri<SessionTag>("sessionTags");
+
+            foreach (var sessionTag in sessionTags)
+            {
+                if (sessionTag.Tag.UserId == _userId)
+                {
+                    SessionTags.Add(sessionTag);
+                }
+            }
+        }
+
         internal async Task LoadSessionsAsync()
         {
             Sessions = new ObservableCollection<Session>();
@@ -278,6 +325,12 @@ namespace ProductivityApp.App.ViewModels
             foreach (var project in projects)
                 if (!string.IsNullOrWhiteSpace(project.ProjectName))
                     Projects.Add(project);
+        }
+
+        public static bool CheckedState(Session currentSession, ObservableCollection<SessionTag> sessionTags)
+        {
+
+            return true;
         }
 
         public ObservableCollection<GroupInfosList> GroupedSessions
@@ -334,6 +387,17 @@ namespace ProductivityApp.App.ViewModels
             set => SetProperty(ref _projects, value);
         }
 
+        public ObservableCollection<Tag> Tags
+        {
+            get => _tags;
+            set => SetProperty(ref _tags, value);
+        }
+
+        public ObservableCollection<SessionTag> SessionTags
+        {
+            get => _sessionTags;
+            set => SetProperty(ref _sessionTags, value);
+        }
         public ObservableCollection<Project> QueriedProjects
         {
             get => _queriedProjects;

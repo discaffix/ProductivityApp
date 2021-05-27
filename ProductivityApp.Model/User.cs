@@ -35,7 +35,7 @@ namespace ProductivityApp.Model
         [Required]
         public string Password { get; set; }
 
-        public DateTime DateOfBirth { get; set; }
+        public DateTimeOffset DateOfBirth { get; set; }
     
         /// <summary>
         /// A collection of the workspaces (one-to-many)

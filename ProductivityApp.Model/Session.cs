@@ -14,9 +14,9 @@ namespace ProductivityApp.Model
 
         public string Description { get; set; }
 
-        public DateTime StartTime { get; set; }
+        public DateTimeOffset StartTime { get; set; }
 
-        public DateTime EndTime { get; set; }
+        public DateTimeOffset EndTime { get; set; }
 
         public int UserId { get; set; }
 
