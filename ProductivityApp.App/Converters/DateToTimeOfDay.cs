@@ -3,7 +3,7 @@ using Windows.UI.Xaml.Data;
 
 namespace ProductivityApp.App.Converters
 {
-    class DateToTimeOfDay : IValueConverter
+    internal class DateToTimeOfDay : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, string language)
         {

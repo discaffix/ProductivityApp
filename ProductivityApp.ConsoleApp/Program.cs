@@ -11,10 +11,10 @@ namespace ProductivityApp.ConsoleApp
             // user object
             var userOne = new User
             {
-                FirstName = "Andre",
-                LastName = "Hande",
-                EmailAddress = "andreeg@hiof.no",
-                Password = "InsaneGamer",
+                FirstName = "Test",
+                LastName = "User",
+                EmailAddress = "sample@test.com",
+                Password = "Password",
                 DateOfBirth = DateTimeOffset.Now
             };
 
@@ -40,19 +40,45 @@ namespace ProductivityApp.ConsoleApp
                 Workspace = workspaceOne
             };
 
-            //var tag_one = new Tag
-            //{
-            //    Name = "Random",
-            //    Description = "Something"
-            //};
+            var projectTwo = new Project()
+            {
+                ProjectName = "Facebook NEXT",
+                Workspace = workspaceOne
+            };
 
-
-            //session_one.Tags.Add(new SessionTag() { Session = session_one, Tag = tag_one });
+            var projectThree = new Project()
+            {
+                ProjectName = "Scaffolding Platform",
+                Workspace = workspaceOne
+            };
+                
             using var db = new ProductivityContext();
+
+            var tagOne = new Tag()
+            {
+                Name = "University"
+            };
+           
+            var tagTwo = new Tag()
+            {
+                Name = "Private Projects"
+            };
+
+            var tagThree = new Tag()
+            {
+                Name = "Portfolio"
+            };
 
             db.Users.Add(userOne);
             db.Workspaces.Add(workspaceOne);
+            db.Projects.Add(projectTwo);
+            db.Projects.Add(projectThree);
             db.Projects.Add(projectOne);
+
+            db.Tags.Add(tagOne);
+            db.Tags.Add(tagTwo);
+            db.Tags.Add(tagThree);
+
             db.SaveChanges();
 
             var sessionOne = new Session

@@ -34,8 +34,9 @@ namespace ProductivityApp.App.ViewModels
         /// </summary>
         private async Task RegisterAsync()
         {
-            if (!PasswordField.Equals(PasswordConfirmedField))
+            if (!PasswordField.Equals(PasswordConfirmedField) || !IsValidEmail(EmailField) || PasswordField.Length < 6)
                 return;
+
 
             var user = new User()
             {
@@ -51,6 +52,19 @@ namespace ProductivityApp.App.ViewModels
             if (created)
                 MenuNavigationHelper.UpdateView(typeof(SignInPage));
 
+        }
+
+        private static bool IsValidEmail(string email)
+        {
+            try
+            {
+                var address = new System.Net.Mail.MailAddress(email);
+                return address.Address == email;
+            }
+            catch
+            {
+                return false;
+            }
         }
 
         public string EmailField

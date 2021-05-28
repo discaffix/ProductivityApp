@@ -141,7 +141,6 @@
   <ItemGroup>
     <Compile Include="Activation\ActivationHandler.cs" />
     <Compile Include="Converters\AutoSuggestionBoxQueryParameterConverter.cs" />
-    <Compile Include="Converters\AutoSuggestTextChangedParameterConverter.cs" />
     <Compile Include="Converters\DatesToTimeSpanConverter.cs" />
     <Compile Include="Converters\DateToTimeOfDay.cs" />
     <Compile Include="Converters\NotTrackingVisibilityConverter.cs" />

@@ -4,7 +4,7 @@ using Windows.UI.Xaml.Data;
 
 namespace ProductivityApp.App.Converters
 {
-    class NotTrackingVisibilityConverter : IValueConverter
+    internal class NotTrackingVisibilityConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, string language)
         {

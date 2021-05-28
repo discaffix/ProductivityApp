@@ -19,9 +19,9 @@ namespace ProductivityApp.App.DataAccess
         public string BaseUri { get; set; }
 
         /// <summary>
-        /// Gets the data from URI.
+        /// Get data from HTTP request
         /// </summary>
-        /// <typeparam name="T">lass from the model</typeparam>
+        /// <typeparam name="T">Deserialized Object from the request</typeparam>
         /// <param name="directTablePath">Name of the table in API.</param>
         /// <returns>A list of objects returned from the GetRequest.</returns>
         internal async Task<T[]> GetDataFromUri<T>(string directTablePath) where T : class
@@ -44,10 +44,10 @@ namespace ProductivityApp.App.DataAccess
         }
 
         /// <summary>
-        /// Gets the entry from database.
+        /// Get an specific entry from the database.
         /// </summary>
-        /// <typeparam name="T">A class</typeparam>
-        /// <param name="directTablePath">Name of table in API.</param>
+        /// <typeparam name="T">Deserialized Object from the request</typeparam>
+        /// <param name="directTablePath">Table you want to get</param>
         /// <param name="id">The ID of the entry.</param>
         /// <returns>An object corresponding to the </returns>
         internal async Task<T> GetEntryFromDatabase<T>(string directTablePath, int id)
@@ -70,11 +70,9 @@ namespace ProductivityApp.App.DataAccess
         }
 
         /// <summary>
-        /// Adds the entry to database.
+        /// Adds an entry to database.
         /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="item">The item.</param>
-        /// <returns></returns>
+        /// <returns>Whether or not task request was successful</returns>
         internal async Task<bool> AddEntryToDatabase<T>(T item) where T : class
         {
             var returnValue = false;
@@ -96,11 +94,9 @@ namespace ProductivityApp.App.DataAccess
         }
 
         /// <summary>
-        /// Deletes the database entry.
+        /// Deletes an entry to the database
         /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="item">The item.</param>
-        /// <returns>Boolean based on the result of DeleteAsync</returns>
+        /// <returns>Whether or not task request was successful</returns>
         internal async Task<bool> DeleteDatabaseEntry<T>(T item) where T : class
         {
             var returnValue = false;
@@ -122,11 +118,10 @@ namespace ProductivityApp.App.DataAccess
         }
 
         /// <summary>
-        /// Updates the database entry.
+        /// Updates an entry in the database
         /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="item">The item.</param>
-        /// <returns>Boolean based on the result of PutAsync</returns>
+        /// <param name="item">The values you want to update the old item with</param>
+        /// <returns>Whether or not task request was successful</returns>
         internal async Task<bool> UpdateDatabaseEntry<T>(T item) where T : class
         {
             var returnValue = false;
