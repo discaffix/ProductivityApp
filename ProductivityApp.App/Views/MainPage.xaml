@@ -22,10 +22,11 @@
     </interactivity:Interaction.Behaviors>
 
     <Page.Resources>
-        <converters:AutoSuggestTextChangedParameterConverter x:Key="ArgsConverter" />
         <converters:DatesToTimeSpanConverter x:Key="DatesToTimeSpanConverter" />
         <converters:DateToTimeOfDay x:Key="DateToTimeOfDayConverter" />
-        <converters:SelectedStateConverter x:Key="SelectedStateConverter" />
+        <converters:NotTrackingVisibilityConverter x:Key="NotTrackingVisibilityConverter" />
+        <converters:TrackingVisibilityConverter x:Key="TrackingVisibilityConverter" />
+        <converters:TrackingStateToSymbol x:Key="TrackingStateToSymbol" />
         <converters:AutoSuggestionBoxQueryParameterConverter x:Key="AutoSuggestionBoxQueryParameterConverter" />
 
         <CollectionViewSource
@@ -33,15 +34,6 @@
             IsSourceGrouped="True"
             Source="{x:Bind ViewModel.GroupedSessions, Mode=OneWay}" />
 
-        <Style x:Key="ContainerStyle" TargetType="GroupItem">
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate>
-                        <controls:Expander Header="{Binding ElementName=Key}" IsExpanded="True" />
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
     </Page.Resources>
 
     <Grid>
@@ -212,10 +204,38 @@
                             <ColumnDefinition Width="40" />
                         </Grid.ColumnDefinitions>
 
+                        <Grid Visibility="{x:Bind ViewModel.TrackingState, Mode=OneWay, Converter={StaticResource NotTrackingVisibilityConverter}}">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="200" />
+                            </Grid.ColumnDefinitions>
+
+                            <Button
+                                Grid.ColumnSpan="2"
+                                HorizontalAlignment="Stretch"
+                                VerticalAlignment="Stretch"
+                                HorizontalContentAlignment="left"
+                                Background="#00000000"
+                                Command="{x:Bind ViewModel.OpenClosePaneCommand}"
+                                Content="+ Click to add Details"
+                                Opacity="1" />
+
+                            <TextBlock
+                                Grid.Column="1"
+                                Margin="0,0,10,0"
+                                HorizontalAlignment="Stretch"
+                                VerticalAlignment="Center"
+                                HorizontalTextAlignment="Right"
+                                Text="{x:Bind ViewModel.ElapsedTime, Mode=OneWay}" />
+
+                        </Grid>
+
                         <TextBox
+                            Grid.Column="0"
                             PlaceholderText="What are you currently working on?"
                             Style="{StaticResource ButtonStyle}"
-                            Text="{x:Bind ViewModel.SessionDescription, Mode=TwoWay}" />
+                            Text="{x:Bind ViewModel.SessionDescription, Mode=TwoWay}"
+                            Visibility="{x:Bind ViewModel.TrackingState, Mode=OneWay, Converter={StaticResource TrackingVisibilityConverter}}" />
                         <Button
                             Grid.Column="0"
                             HorizontalAlignment="Stretch"
@@ -230,9 +250,9 @@
                             Width="40"
                             Height="40"
                             AutomationProperties.Name="Pie"
-                            Command="{x:Bind ViewModel.OpenClosePaneCommand}"
+                            Command="{x:Bind ViewModel.TrackingStateCommand}"
                             Style="{StaticResource ButtonStyle}">
-                            <SymbolIcon Symbol="Play" />
+                            <SymbolIcon Symbol="{x:Bind ViewModel.TrackingState, Mode=OneWay, Converter={StaticResource TrackingStateToSymbol}}" />
 
                         </Button>
                     </Grid>
@@ -291,8 +311,14 @@
                     <ListView
                         Grid.Row="2"
                         Padding="{StaticResource SmallTopMargin}"
+                        IsItemClickEnabled="True"
                         ItemsSource="{Binding Source={StaticResource CollectionViewSource}}"
                         SelectedItem="{x:Bind ViewModel.SelectedSession, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                        <interactivity:Interaction.Behaviors>
+                            <core:EventTriggerBehavior EventName="ItemClick">
+                                <core:InvokeCommandAction Command="{x:Bind ViewModel.OpenClosePaneCommand}" />
+                            </core:EventTriggerBehavior>
+                        </interactivity:Interaction.Behaviors>
 
                         <ListView.ItemContainerStyle>
                             <Style TargetType="ListViewItem">
@@ -316,7 +342,6 @@
                                         <ColumnDefinition Width="*" />
                                         <ColumnDefinition Width="*" />
                                     </Grid.ColumnDefinitions>
-
                                     <TextBlock
                                         Grid.Row="0"
                                         Grid.Column="0"
@@ -340,7 +365,6 @@
                                 </Grid>
                             </DataTemplate>
                         </ListView.ItemTemplate>
-
                         <ListView.GroupStyle>
                             <GroupStyle>
                                 <GroupStyle.HeaderTemplate>
@@ -350,7 +374,6 @@
                                 </GroupStyle.HeaderTemplate>
                             </GroupStyle>
                         </ListView.GroupStyle>
-
                     </ListView>
                 </Grid>
             </Grid>

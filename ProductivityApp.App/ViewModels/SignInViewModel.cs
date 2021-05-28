@@ -14,8 +14,16 @@ namespace ProductivityApp.App.ViewModels
 {
     public class SignInViewModel : ObservableObject
     {
-        public ICommand LoginCommand;
-        public ICommand PageLoadedCommand;
+        private ICommand _loginCommand;
+        private ICommand _pageLoadedCommand;
+        private ICommand _registerCommand;
+
+        public ICommand LoginCommand => _loginCommand ?? (_loginCommand = new AsyncRelayCommand(Login));
+        public ICommand PageLoadedCommand => _pageLoadedCommand ?? (_pageLoadedCommand = new AsyncRelayCommand(Login));
+
+        public ICommand RegisterCommand => _registerCommand ?? (_registerCommand = new RelayCommand(NavigateToRegister));
+
+
         private string _emailField = string.Empty;
         private string _passwordField = string.Empty;
 
@@ -24,8 +32,7 @@ namespace ProductivityApp.App.ViewModels
 
         public SignInViewModel()
         {
-            LoginCommand = new AsyncRelayCommand(Login);
-            PageLoadedCommand = new RelayCommand(PageLoaded);
+           
         }
 
         public void PageLoaded()
@@ -53,6 +60,7 @@ namespace ProductivityApp.App.ViewModels
             MenuNavigationHelper.UpdateView(typeof(MainPage));
         }
 
+        private static void NavigateToRegister() => MenuNavigationHelper.UpdateView(typeof(RegisterPage));
 
         public string EmailField
         {

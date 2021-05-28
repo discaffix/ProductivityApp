@@ -8,6 +8,7 @@ using ProductivityApp.Model;
 using System;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.Globalization;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -23,7 +24,6 @@ namespace ProductivityApp.App.ViewModels
     {
         private readonly CrudOperations
             _dataAccess = new CrudOperations("http://localhost:60098/api", new HttpClient());
-        private ICommand _checkTagCheckBoxCommand;
         private ICommand _deleteEntryCommand;
         private string _elapsedTime = string.Empty;
         private ObservableCollection<GroupInfosList> _groupedSessions = new ObservableCollection<GroupInfosList>();
@@ -39,7 +39,8 @@ namespace ProductivityApp.App.ViewModels
         private ICommand _saveChangesCommand;
         private ICommand _searchFieldEnterCommand;
         private Session _selectedSession;
-
+        private bool _trackingState;
+        private ICommand _trackingStateCommand;
         private Session _session = new Session();
 
         private string _sessionDescription = string.Empty;
@@ -53,7 +54,6 @@ namespace ProductivityApp.App.ViewModels
         private ICommand _stopSessionCommand;
         private ObservableCollection<Tag> _tags = new ObservableCollection<Tag>();
         private ICommand _textChangeCommand;
-        private ICommand _unCheckTagCheckBoxCommand;
         private int _userId;
 
         public MainViewModel()
@@ -61,11 +61,6 @@ namespace ProductivityApp.App.ViewModels
             StartDispatcherTimer();
         }
 
-        public ICommand CheckTagCheckBoxCommand =>
-            _checkTagCheckBoxCommand ?? (_checkTagCheckBoxCommand = new RelayCommand(CheckBox));
-
-        public ICommand UnCheckTagCheckBoxCommand =>
-            _unCheckTagCheckBoxCommand ?? (_unCheckTagCheckBoxCommand = new RelayCommand(UnCheckBox));
 
         public ICommand StartSessionCommand =>
             _startSessionCommand ?? (_startSessionCommand = new RelayCommand(StartSession));
@@ -76,6 +71,9 @@ namespace ProductivityApp.App.ViewModels
         public ICommand SearchFieldEnterCommand =>
             _searchFieldEnterCommand ?? (_searchFieldEnterCommand =
                 new RelayCommand<KeyRoutedEventArgs>(QuerySearchFieldProjectNames));
+
+        public ICommand TrackingStateCommand =>
+            _trackingStateCommand ?? (_trackingStateCommand = new RelayCommand(TrackingStateChanger));
 
         public ICommand TextChangedCommand =>
             _textChangeCommand ?? (_textChangeCommand = new RelayCommand(TextChangedSuggestBox));
@@ -99,6 +97,12 @@ namespace ProductivityApp.App.ViewModels
         {
             get => _groupedSessions;
             set => SetProperty(ref _groupedSessions, value);
+        }
+
+        public bool TrackingState
+        {
+            get => _trackingState;
+            set => SetProperty(ref _trackingState, value);
         }
 
         public string ElapsedTime
@@ -183,6 +187,7 @@ namespace ProductivityApp.App.ViewModels
         }
 
         /// <summary>
+        /// Executed when the MainPage is loaded
         /// </summary>
         public async void PageLoaded()
         {
@@ -194,7 +199,7 @@ namespace ProductivityApp.App.ViewModels
         }
 
         /// <summary>
-        /// Get the values
+        /// Checks whether or not a user is logged in
         /// </summary>
         public void AuthenticationAttempt()
         {
@@ -223,16 +228,20 @@ namespace ProductivityApp.App.ViewModels
 
             if (!success) return;
 
-            // https://docs.microsoft.com/en-us/windows/uwp/design/shell/tiles-and-notifications/adaptive-interactive-toasts?tabs=builder-syntax
-
-            new ToastContentBuilder()
-                .AddText("Session Deleted", hintMaxLines: 1)
-                .AddText($"Id: {SelectedSession.SessionId}")
-                .AddText(DateTimeOffset.Now.ToString())
-                .Show();
+            BuildAndDisplayToast("Session Deleted", $"Id: {SelectedSession.SessionId}");
 
             await LoadSessionsAsync();
             SelectedSession = null;
+        }
+
+        public void BuildAndDisplayToast(string title, string firstLine)
+        {
+
+            new ToastContentBuilder()
+                .AddText(title, hintMaxLines: 1)
+                .AddText(firstLine)
+                .AddText(DateTimeOffset.UtcNow.LocalDateTime.ToString(CultureInfo.InvariantCulture))
+                .Show();
         }
 
         /// <summary>
@@ -258,17 +267,13 @@ namespace ProductivityApp.App.ViewModels
                 await LoadProjectsASync();
         }
 
+        /// <summary>
+        /// Assigns selected project to the selectedSession object (the one that is currently being edited)
+        /// </summary>
+        /// <param name="project">The project.</param>
         public void QuerySubmitted(Project project)
         {
             SelectedSession.ProjectId = project.ProjectId;
-        }
-
-        public void CheckBox()
-        {
-        }
-
-        public void UnCheckBox()
-        {
         }
 
         public async void SaveChangesToDatabaseEntry()
@@ -288,6 +293,7 @@ namespace ProductivityApp.App.ViewModels
 
             StartSessionBtnEnabled = false;
             StopSessionBtnEnabled = true;
+            BuildAndDisplayToast("Started tracking session!", "Press the stop button to stop tracking.");
         }
 
         /// <summary>
@@ -316,12 +322,16 @@ namespace ProductivityApp.App.ViewModels
                 _session = new Session();
 
                 await LoadSessionsAsync();
+
+                BuildAndDisplayToast("Session Saved", "");
             }
+
+
         }
 
 
         /// <summary>
-        ///     Texts the changed suggest box.
+        /// Handling for the Project SuggestBox
         /// </summary>
         public void TextChangedSuggestBox()
         {
@@ -342,11 +352,34 @@ namespace ProductivityApp.App.ViewModels
             QueriedProjects = selectedItems;
         }
 
+        /// <summary>
+        /// Sets the tracking state and starts/ends session
+        /// </summary>
+        private void TrackingStateChanger()
+        {
+            if (!TrackingState)
+                StartSession();
+            else
+            {
+                StopSession();
+            }
+
+            TrackingState = !TrackingState;
+        }
+
+        /// <summary>
+        /// Changes the state of the panel.
+        /// </summary>
         public void ChangePanelState()
         {
             OpenPaneBtnEnabled = !OpenPaneBtnEnabled;
         }
 
+        /// <summary>
+        /// Executed every time interval to update the timer.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The e.</param>
         private void Timer_Tick(object sender, object e)
         {
             ElapsedTime = !StartSessionBtnEnabled
@@ -354,10 +387,9 @@ namespace ProductivityApp.App.ViewModels
                 : string.Empty;
         }
 
-        private void CheckedBoxes(object sender, EventArgs e)
-        {
-        }
-
+        /// <summary>
+        /// Loads the sessionTags asynchronous.
+        /// </summary>
         internal async Task LoadSessionTagsAsync()
         {
             var sessionTags = await _dataAccess.GetDataFromUri<SessionTag>("sessionTags");
@@ -367,6 +399,9 @@ namespace ProductivityApp.App.ViewModels
                     SessionTags.Add(sessionTag);
         }
 
+        /// <summary>
+        /// Loads the sessions asynchronous.
+        /// </summary>
         internal async Task LoadSessionsAsync()
         {
             Sessions = new ObservableCollection<Session>();
@@ -376,7 +411,7 @@ namespace ProductivityApp.App.ViewModels
 
 
             foreach (var session in sessions)
-                if (!string.IsNullOrWhiteSpace(session.Description) && session.UserId == _userId)
+                if (session.UserId == _userId)
                     Sessions.Add(session);
 
             Sessions = new ObservableCollection<Session>(Sessions.OrderByDescending(d => d.StartTime));
@@ -396,7 +431,7 @@ namespace ProductivityApp.App.ViewModels
 
             GroupedSessions =
                 new ObservableCollection<GroupInfosList>(
-                    GroupedSessions.OrderByDescending(k => k.Key is DateTime key ? key : default));
+                    GroupedSessions.OrderByDescending(k => k.Key is DateTimeOffset key ? key : default));
         }
 
         internal async Task LoadProjectsASync()
@@ -408,11 +443,6 @@ namespace ProductivityApp.App.ViewModels
             foreach (var project in projects)
                 if (!string.IsNullOrWhiteSpace(project.ProjectName))
                     Projects.Add(project);
-        }
-
-        public static bool CheckedState(Session currentSession, ObservableCollection<SessionTag> sessionTags)
-        {
-            return true;
         }
     }
 }

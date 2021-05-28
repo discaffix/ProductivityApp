@@ -14,7 +14,7 @@ namespace ProductivityApp.App.ViewModels
     public class RegisterViewModel : ObservableObject
     {
         public ICommand RegisterButtonCommand;
-
+        
         private string _emailField;
         private string _firstNameField;
         private string _lastNameField;

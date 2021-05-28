@@ -23,6 +23,7 @@ namespace ProductivityApp.App.ViewModels
         private ICommand _menuFilesSettingsCommand;
         private ICommand _menuViewsSignInCommand;
         private ICommand _menuViewsRegisterCommand;
+        private ICommand _menuViewsProfileCommand;
         private ICommand _menuFileExitCommand;
 
 
@@ -35,6 +36,8 @@ namespace ProductivityApp.App.ViewModels
         public ICommand MenuViewsSignInCommand => _menuViewsSignInCommand ?? (_menuViewsSignInCommand = new RelayCommand(OnMenuViewsSignIn));
 
         public ICommand MenuViewsRegisterCommand => _menuViewsRegisterCommand ?? (_menuViewsRegisterCommand = new RelayCommand(OnMenuViewsRegister));
+
+        public ICommand MenuViewsProfileCommand => _menuViewsProfileCommand ?? (_menuViewsProfileCommand = new RelayCommand(OnMenuViewsProfile));
 
         public ICommand MenuFileExitCommand => _menuFileExitCommand ?? (_menuFileExitCommand = new RelayCommand(OnMenuFileExit));
 
@@ -66,6 +69,8 @@ namespace ProductivityApp.App.ViewModels
         private void OnMenuViewsSignIn() => MenuNavigationHelper.UpdateView(typeof(SignInPage));
 
         private void OnMenuViewsRegister() => MenuNavigationHelper.UpdateView(typeof(RegisterPage));
+
+        private void OnMenuViewsProfile() => MenuNavigationHelper.UpdateView(typeof(ProfilePage));
 
         private void OnMenuFileExit()
         {

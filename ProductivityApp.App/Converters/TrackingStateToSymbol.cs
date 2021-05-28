@@ -1,17 +1,14 @@
-﻿using ProductivityApp.Model;
-using System;
+﻿using System;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Data;
 
 namespace ProductivityApp.App.Converters
 {
-    internal class AutoSuggestionBoxQueryParameterConverter : IValueConverter
+    internal class TrackingStateToSymbol : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, string language)
         {
-            var args = (AutoSuggestBoxQuerySubmittedEventArgs)value;
-
-            return (Project)args.ChosenSuggestion;
+            return (bool)value ? Symbol.Pause : Symbol.Play;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, string language)

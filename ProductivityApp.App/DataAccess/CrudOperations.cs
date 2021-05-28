@@ -52,10 +52,21 @@ namespace ProductivityApp.App.DataAccess
         /// <returns>An object corresponding to the </returns>
         internal async Task<T> GetEntryFromDatabase<T>(string directTablePath, int id)
         {
-            var uri = new Uri(BaseUri + directTablePath);
-            var result = await HttpClient.GetAsync($"{uri}/{id}");
-            var json = await result.Content.ReadAsStringAsync();
-            return JsonConvert.DeserializeObject<T>(json);
+            var returnValue = default(T);
+
+            try
+            {
+                var uri = new Uri(BaseUri + directTablePath);
+                var result = await HttpClient.GetAsync($"{uri}/{id}");
+                var json = await result.Content.ReadAsStringAsync();
+                returnValue = JsonConvert.DeserializeObject<T>(json);
+            }
+            catch (HttpRequestException e)
+            {
+                Debug.WriteLine(e);
+            }
+
+            return returnValue;
         }
 
         /// <summary>
@@ -66,11 +77,22 @@ namespace ProductivityApp.App.DataAccess
         /// <returns></returns>
         internal async Task<bool> AddEntryToDatabase<T>(T item) where T : class
         {
-            var typeName = GetTypeName(item);
-            var uri = new Uri($"{BaseUri}/{typeName}");
-            var json = JsonConvert.SerializeObject(item);
-            var result = await HttpClient.PostAsync(uri, new StringContent(json, Encoding.UTF8, "application/json"));
-            return result.IsSuccessStatusCode;
+            var returnValue = false;
+
+            try
+            {
+                var typeName = GetTypeName(item);
+                var uri = new Uri($"{BaseUri}/{typeName}");
+                var json = JsonConvert.SerializeObject(item);
+                var result = await HttpClient.PostAsync(uri, new StringContent(json, Encoding.UTF8, "application/json"));
+                returnValue = result.IsSuccessStatusCode;
+            }
+            catch (HttpRequestException e)
+            {
+                Console.WriteLine(e);
+            }
+
+            return returnValue;
         }
 
         /// <summary>
@@ -81,11 +103,22 @@ namespace ProductivityApp.App.DataAccess
         /// <returns>Boolean based on the result of DeleteAsync</returns>
         internal async Task<bool> DeleteDatabaseEntry<T>(T item) where T : class
         {
-            var id = GetObjectId(item);
-            var typeName = GetTypeName(item);
-            var uri = new Uri($"{BaseUri}/{typeName}/{id}");
-            var result = await HttpClient.DeleteAsync(uri);
-            return result.IsSuccessStatusCode;
+            var returnValue = false;
+
+            try
+            {
+                var id = GetObjectId(item);
+                var typeName = GetTypeName(item);
+                var uri = new Uri($"{BaseUri}/{typeName}/{id}");
+                var result = await HttpClient.DeleteAsync(uri);
+                returnValue = result.IsSuccessStatusCode;
+            }
+            catch (HttpRequestException e)
+            {
+                Console.WriteLine(e);
+            }
+
+            return returnValue;
         }
 
         /// <summary>
@@ -96,12 +129,23 @@ namespace ProductivityApp.App.DataAccess
         /// <returns>Boolean based on the result of PutAsync</returns>
         internal async Task<bool> UpdateDatabaseEntry<T>(T item) where T : class
         {
-            var id = GetObjectId(item);
-            var typeName = GetTypeName(item);
-            var uri = new Uri($"{BaseUri}/{typeName}/{id}");
-            var json = JsonConvert.SerializeObject(item);
-            var result = await HttpClient.PutAsync(uri, new StringContent(json, Encoding.UTF8, "application/json"));
-            return result.IsSuccessStatusCode;
+            var returnValue = false;
+
+            try
+            {
+                var id = GetObjectId(item);
+                var typeName = GetTypeName(item);
+                var uri = new Uri($"{BaseUri}/{typeName}/{id}");
+                var json = JsonConvert.SerializeObject(item);
+                var result = await HttpClient.PutAsync(uri, new StringContent(json, Encoding.UTF8, "application/json"));
+                returnValue = result.IsSuccessStatusCode;
+            }
+            catch (HttpRequestException e)
+            {
+                Console.WriteLine(e);
+            }
+
+            return returnValue;
         }
 
         /// <summary>
